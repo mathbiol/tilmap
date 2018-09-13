@@ -1,2 +1,2 @@
 # tilmap
-Tumor Infiltration lymphocyte Maps
+Tumor Infiltration Lymphocyte Maps, live at https://mathbiol.github.io/tilmap

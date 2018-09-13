@@ -1,0 +1,1 @@
+console.log('tilmap.js loaded')
