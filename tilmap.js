@@ -15,6 +15,8 @@ tilmap.ui=function(div){
     tilmap.selTumorType=div.querySelector('#selTumorType')
     tilmap.selTumorTissue=div.querySelector('#selTumorTissue')
     tilmap.tilShowImgDiv=div.querySelector('#tilShowImgDiv')
+    tilmap.selTumorType.style.backgroundColor='lime'
+    tilmap.selTumorTissue.style.backgroundColor='orange'
     tilmap.getJSON().then(x=>{
         tilmap.index(x) // build TissueIndex
         for(var t in tilmap.tumorIndex){
@@ -71,12 +73,14 @@ tilmap.index=function(x){
 
 tilmap.showTIL=function(){ // get image and display it
     var url=location.href+'TIL_maps_before_thres_v2/'+tilmap.selTumorType.value+'/'+tilmap.selTumorTissue.value
-    //var h='<a href="'+url+'" target="_blank">'+url+'</a>'
     var h='<div><img id="imgTIL" src='+url+'></div><div><a href="'+url+'" target="_blank">'+url+'</a></div>'
+    var h = '<table>'
+    h += '<tr><td style="vertical-align:top"><img id="imgTIL" src='+url+'></td><td id="calcTIL" style="vertical-align:top">... interactive analytics goes here ...</td></tr>'
+    h += '<tr><td><a href="'+url+'" target="_blank" style="font-size:small">'+url+'</a></td><td>'+Date().slice(0,24)+'</td></tr>'
+    h += '</table>'
 
     tilmap.tilShowImgDiv.innerHTML=h
     tilmap.tilShowImgDiv.style.color='navy'
-    tilmap.tilShowImgDiv.style.fontSize='small'
     var dt=tilmap.tumorIndex[tilmap.selTumorType.value][tilmap.selTumorTissue.value]
     //debugger
 }
