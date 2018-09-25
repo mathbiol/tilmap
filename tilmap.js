@@ -78,10 +78,20 @@ tilmap.showTIL=function(){ // get image and display it
     h += '<tr><td style="vertical-align:top"><img id="imgTIL" src='+url+'></td><td id="calcTIL" style="vertical-align:top">... interactive analytics goes here ...</td></tr>'
     h += '<tr><td><a href="'+url+'" target="_blank" style="font-size:small">'+url+'</a></td><td>'+Date().slice(0,24)+'</td></tr>'
     h += '</table>'
-
+    h += '<iframe id="caMicrocopeIfr" width="100%" height="100%" src="http://quip1.uhmc.sunysb.edu:443/camicroscope/osdCamicroscope.php?tissueId='+tilmap.selTumorTissue.value.replace('.png','')+'">'
     tilmap.tilShowImgDiv.innerHTML=h
     tilmap.tilShowImgDiv.style.color='navy'
     var dt=tilmap.tumorIndex[tilmap.selTumorType.value][tilmap.selTumorTissue.value]
+
+    var h2 ='<h3>Interactive Analytics</h3>'
+    var url2='http://quip1.uhmc.sunysb.edu:443/camicroscope/osdCamicroscope.php?tissueId='+tilmap.selTumorTissue.value.replace('.png','')
+    h2 += '<p>CaMicroscope</p>'
+    var td = tilmap.div.querySelector('#calcTIL')
+    td.innerHTML=h2
+
+    //http://quip1.uhmc.sunysb.edu:443/camicroscope/osdCamicroscope.php?tissueId=TCGA-05-4244-01Z-00-DX1
+
+
     //debugger
 }
 
