@@ -87,12 +87,37 @@ tilmap.showTIL=function(){ // get image and display it
     var h2 ='<h3>Interactive Analytics</h3>'
     var url2='https://quip1.bmi.stonybrook.edu:8443/camicroscope/osdCamicroscope.php?tissueId='+tilmap.selTumorTissue.value.replace('.png','')
     //var url2='http://quip1.uhmc.sunysb.edu:443/camicroscope/osdCamicroscope.php?tissueId='+tilmap.selTumorTissue.value.replace('.png','')
-    h2 += '<p>CaMicroscope</p>'
+    h2 += '<div id="calcTILdiv">CaMicroscope</div>'
     var td = tilmap.div.querySelector('#calcTIL')
     td.innerHTML=h2
+    tilmap.calcTILdiv=tilmap.div.querySelector('#calcTILdiv')
+    if(typeof(jmat)!=="undefined"){
+        tilmap.calcTILfun()
+    }else{
+        var s = document.createElement('script')
+        s.src="https://jonasalmeida.github.io/jmat/jmat.js"
+        s.onload=tilmap.calcTILfun
+        document.head.appendChild(s)
+    }
+}
 
-    //http://quip1.uhmc.sunysb.edu:443/camicroscope/osdCamicroscope.php?tissueId=TCGA-05-4244-01Z-00-DX1
+tilmap.calcTILfun=function(){
+    var h=' Decode RGB maps: <button id="calcTILred" style="background-color:red"> R </button>'
+    h += '<button id="calcTILgreen" style="background-color:green"> G </button>'
+    h += '<button id="calcTILblue" style="background-color:cyan"> B </button>'
+    h += '<button id="calcTIL0" style="background-color:white"> Orig </button>'
+    tilmap.calcTILdiv.innerHTML=h
+    // read the image data
+    tilmap.img = tilmap.div.querySelector('#imgTIL')
+    tilmap.img.onload=function(){
+        var cvBase=document.createElement('canvas');
+        var ctx=cvBase.getContext('2d');
+        ctx.drawImage(this,0,0);
+        tilmap.imgData=jmat.imread(cvBase);
+        //debugger
+    }
 
+    var cvBase=document.createElement('canvas');
 
     //debugger
 }
