@@ -84,7 +84,8 @@ tilmap.showTIL=function(){ // get image and display it
     var dt=tilmap.tumorIndex[tilmap.selTumorType.value][tilmap.selTumorTissue.value]
 
     var h2 ='<h3>Interactive Analytics</h3>'
-    var url2='http://quip1.uhmc.sunysb.edu:443/camicroscope/osdCamicroscope.php?tissueId='+tilmap.selTumorTissue.value.replace('.png','')
+    var url2='https://quip1.bmi.stonybrook.edu:8443/camicroscope/osdCamicroscope.php?tissueId='+tilmap.selTumorTissue.value.replace('.png','')
+    //var url2='http://quip1.uhmc.sunysb.edu:443/camicroscope/osdCamicroscope.php?tissueId='+tilmap.selTumorTissue.value.replace('.png','')
     h2 += '<p>CaMicroscope</p>'
     var td = tilmap.div.querySelector('#calcTIL')
     td.innerHTML=h2
