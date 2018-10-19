@@ -114,13 +114,21 @@ tilmap.calcTILfun=function(){
         var ctx=cvBase.getContext('2d');
         ctx.drawImage(this,0,0);
         tilmap.imgData=jmat.imread(cvBase);
+        // extract RGB
+        tilmap.imgDataR=tilmap.imSlice(0)
+        tilmap.imgDataG=tilmap.imSlice(1)
+        tilmap.imgDataB=tilmap.imSlice(2)
         //debugger
     }
-
-    var cvBase=document.createElement('canvas');
-
-    //debugger
 }
 
+tilmap.imSlice=function(i){ // slice ith layer of imgData matrix
+    i=i||0
+    return tilmap.imgData.map(x=>{
+        return x.map(y=>{
+            return y[i]
+        })
+    })
+}
 
 window.onload=tilmap
