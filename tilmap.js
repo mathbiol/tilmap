@@ -120,6 +120,14 @@ tilmap.calcTILfun=function(){
         tilmap.imgDataB=tilmap.imSlice(2)
         //debugger
     }
+    tilmap.img.onclick=function(ev){
+        if(typeof(tammy)=="undefined"){
+            var s=document.createElement('script')
+            s.src="tammy.js"
+            s.onload=function(){tammy(ev)} 
+            document.head.appendChild(s)
+        }else{tammy(ev)}
+    }
 }
 
 tilmap.imSlice=function(i){ // slice ith layer of imgData matrix
