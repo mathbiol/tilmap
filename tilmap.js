@@ -110,14 +110,21 @@ tilmap.calcTILfun=function(){
     // read the image data
     tilmap.img = tilmap.div.querySelector('#imgTIL')
     tilmap.img.onload=function(){
-        var cvBase=document.createElement('canvas');
-        var ctx=cvBase.getContext('2d');
-        ctx.drawImage(this,0,0);
-        tilmap.imgData=jmat.imread(cvBase);
+        tilmap.cvBase=document.createElement('canvas');
+        tilmap.cvBase.hidden=true
+        tilmap.cvBase.width=tilmap.img.width
+        tilmap.cvBase.height=tilmap.img.height
+        tilmap.img.parentElement.appendChild(tilmap.cvBase)
+        tilmap.ctx=tilmap.cvBase.getContext('2d');
+        tilmap.ctx.drawImage(this,0,0);
+        tilmap.imgData=jmat.imread(tilmap.cvBase);
         // extract RGB
         tilmap.imgDataR=tilmap.imSlice(0)
         tilmap.imgDataG=tilmap.imSlice(1)
         tilmap.imgDataB=tilmap.imSlice(2)
+        calcTILred.onclick=function(){tilmap.from2D(tilmap.imSlice(0))}
+        calcTILgreen.onclick=function(){tilmap.from2D(tilmap.imSlice(1))}
+        calcTILblue.onclick=function(){tilmap.from2D(tilmap.imSlice(2))}
         //debugger
     }
     tilmap.img.onclick=function(ev){
@@ -128,6 +135,22 @@ tilmap.calcTILfun=function(){
             document.head.appendChild(s)
         }else{tammy(ev)}
     }
+}
+
+tilmap.from2D=function(dd){
+    tilmap.cvBase.hidden=false
+    tilmap.img.hidden=true
+    var cm=jmat.colormap()
+    var k = 63/255 // png values are between 0-255 and cm 0-63
+    var ddd = dd.map(function(d){
+        return d.map(function(v){
+            return cm[Math.round(v*k)].map(x=>Math.round(x*255)).concat(255)
+        })
+    })
+    //tilmap.ctx.putImageData(jmat.data2imData(ddd),0,0)
+    //jmat.imwrite(tilmap.img,ddd)
+    jmat.imwrite(tilmap.cvBase,ddd)
+    //debugger
 }
 
 tilmap.imSlice=function(i){ // slice ith layer of imgData matrix
