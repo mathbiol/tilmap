@@ -106,7 +106,7 @@ tilmap.calcTILfun=function(){
     h += '<p><button id="calcTILred" style="background-color:red"> Red channel </button></p>'
     h += '<p><button id="calcTILgreen" style="background-color:green"> Green channel </button></p>'
     h += '<p><button id="calcTILblue" style="background-color:cyan"> Blue channel </button></p>'
-    h += '<p><button id="calcTIL0" style="background-color:white"> Composite </button></p>'
+    h += '<p><button id="calcTIL0" style="background-color:white"> original png </button></p>'
     h += '<p><input id="cancerTilRange" type="range" style="width:200px"><br>Tumor <---(prediction)---> TIL</p>'
     tilmap.calcTILdiv.innerHTML=h
     // read the image data
@@ -134,6 +134,23 @@ tilmap.calcTILfun=function(){
         }
         //debugger
         tilmap.cvBase.onclick=tilmap.img.onclick
+        cancerTilRange.onchange=function(){
+            tilmap.cvBase.hidden=false
+            tilmap.img.hidden=true
+            var cm=jmat.colormap()
+            var k = parseInt(this.value)/100 //slider value
+            var ddd = tilmap.imgData.map(function(dd){
+                return dd.map(function(d){
+                    var r = k*d[0]/255
+                    var g = (1-k)*d[1]/255
+                    return cm[Math.round((r+g)*63)].map(x=>Math.round(x*255)).concat(d[2])
+                    //debugger
+                })
+            })
+            jmat.imwrite(tilmap.cvBase,ddd)
+            //debugger
+        }
+        //cancerTilRange.onchange() // <-- start with the 50% mix
     }
     tilmap.img.onload() // start image
     tilmap.img.onclick=function(ev){
@@ -144,6 +161,7 @@ tilmap.calcTILfun=function(){
             document.head.appendChild(s)
         }else{tammy(ev)}
     }
+    /*
     cancerTilRange.onchange=function(){
         tilmap.cvBase.hidden=false
         tilmap.img.hidden=true
@@ -160,6 +178,7 @@ tilmap.calcTILfun=function(){
         jmat.imwrite(tilmap.cvBase,ddd)
         //debugger
     }
+    */
 }
 
 tilmap.from2D=function(dd){
