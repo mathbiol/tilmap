@@ -107,11 +107,13 @@ tilmap.calcTILfun=function(){
     h += '<p><button id="calcTILgreen" style="background-color:green"> Green channel </button></p>'
     h += '<p><button id="calcTILblue" style="background-color:cyan"> Blue channel </button></p>'
     h += '<p><button id="calcTIL0" style="background-color:white"> Composite </button></p>'
+    h += '<p><input id="cancerTilRange" type="range" style="width:200px"><br>Tumor <---(prediction)---> TIL</p>'
     tilmap.calcTILdiv.innerHTML=h
     // read the image data
     tilmap.img = tilmap.div.querySelector('#imgTIL')
     tilmap.img.onload=function(){
         tilmap.cvBase=document.createElement('canvas');
+        //tilmap.cvBase.onclick=tilmap.img.onclick
         tilmap.cvBase.hidden=true
         tilmap.cvBase.width=tilmap.img.width
         tilmap.cvBase.height=tilmap.img.height
@@ -131,6 +133,7 @@ tilmap.calcTILfun=function(){
             tilmap.cvBase.hidden=true
         }
         //debugger
+        tilmap.cvBase.onclick=tilmap.img.onclick
     }
     tilmap.img.onload() // start image
     tilmap.img.onclick=function(ev){
