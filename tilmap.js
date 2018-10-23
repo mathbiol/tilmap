@@ -6,6 +6,10 @@ tilmap=function(){
     if(tilmap.div){tilmap.ui()}
 }
 
+tilmap.parms={
+    range:50
+}
+
 tilmap.ui=function(div){
     div=div||tilmap.div // default div
     h='<h3 style="color:maroon">Til Maps</h3>'
@@ -109,6 +113,7 @@ tilmap.calcTILfun=function(){
     h += '<p><button id="calcTIL0" style="background-color:white"> original png </button></p>'
     h += '<p><input id="cancerTilRange" type="range" style="width:200px"><br>Tumor <---(prediction)---> TIL</p>'
     tilmap.calcTILdiv.innerHTML=h
+    cancerTilRange.value=tilmap.parms.range
     // read the image data
     tilmap.img = tilmap.div.querySelector('#imgTIL')
     tilmap.img.onload=function(){
@@ -139,6 +144,7 @@ tilmap.calcTILfun=function(){
             tilmap.img.hidden=true
             var cm=jmat.colormap()
             var k = parseInt(this.value)/100 //slider value
+            tilmap.parms.range=this.value
             var ddd = tilmap.imgData.map(function(dd){
                 return dd.map(function(d){
                     var r = k*d[0]/255
