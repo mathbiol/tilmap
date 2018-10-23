@@ -102,10 +102,11 @@ tilmap.showTIL=function(){ // get image and display it
 }
 
 tilmap.calcTILfun=function(){
-    var h=' Decode RGB maps: <button id="calcTILred" style="background-color:red"> R </button>'
-    h += '<button id="calcTILgreen" style="background-color:green"> G </button>'
-    h += '<button id="calcTILblue" style="background-color:cyan"> B </button>'
-    h += '<button id="calcTIL0" style="background-color:white"> Orig </button>'
+    var h=' Decode RGB maps:'
+    h += '<p><button id="calcTILred" style="background-color:red"> Red channel </button></p>'
+    h += '<p><button id="calcTILgreen" style="background-color:green"> Green channel </button></p>'
+    h += '<p><button id="calcTILblue" style="background-color:cyan"> Blue channel </button></p>'
+    h += '<p><button id="calcTIL0" style="background-color:white"> Composite </button></p>'
     tilmap.calcTILdiv.innerHTML=h
     // read the image data
     tilmap.img = tilmap.div.querySelector('#imgTIL')
@@ -125,8 +126,13 @@ tilmap.calcTILfun=function(){
         calcTILred.onclick=function(){tilmap.from2D(tilmap.imSlice(0))}
         calcTILgreen.onclick=function(){tilmap.from2D(tilmap.imSlice(1))}
         calcTILblue.onclick=function(){tilmap.from2D(tilmap.imSlice(2))}
+        calcTIL0.onclick=function(){
+            tilmap.img.hidden=false
+            tilmap.cvBase.hidden=true
+        }
         //debugger
     }
+    tilmap.img.onload() // start image
     tilmap.img.onclick=function(ev){
         if(typeof(tammy)=="undefined"){
             var s=document.createElement('script')
