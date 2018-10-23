@@ -144,6 +144,22 @@ tilmap.calcTILfun=function(){
             document.head.appendChild(s)
         }else{tammy(ev)}
     }
+    cancerTilRange.onchange=function(){
+        tilmap.cvBase.hidden=false
+        tilmap.img.hidden=true
+        var cm=jmat.colormap()
+        var k = parseInt(this.value)/100 //slider value
+        var ddd = tilmap.imgData.map(function(dd){
+            return dd.map(function(d){
+                var r = k*d[0]/255
+                var g = (1-k)*d[1]/255
+                return cm[Math.round((r+g)*63)].map(x=>Math.round(x*255)).concat(d[2])
+                //debugger
+            })
+        })
+        jmat.imwrite(tilmap.cvBase,ddd)
+        //debugger
+    }
 }
 
 tilmap.from2D=function(dd){
