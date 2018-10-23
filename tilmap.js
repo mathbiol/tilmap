@@ -134,7 +134,7 @@ tilmap.calcTILfun=function(){
         }
         //debugger
         tilmap.cvBase.onclick=tilmap.img.onclick
-        cancerTilRange.onchange=function(){
+        cancerTilRange.onclick=cancerTilRange.onchange=function(){
             tilmap.cvBase.hidden=false
             tilmap.img.hidden=true
             var cm=jmat.colormap()
@@ -150,9 +150,11 @@ tilmap.calcTILfun=function(){
             jmat.imwrite(tilmap.cvBase,ddd)
             //debugger
         }
+        setTimeout(function(){cancerTilRange.onchange()},100)
         //cancerTilRange.onchange() // <-- start with the 50% mix
     }
     tilmap.img.onload() // start image
+    //cancerTilRange.onchange() // start range
     tilmap.img.onclick=function(ev){
         if(typeof(tammy)=="undefined"){
             var s=document.createElement('script')
@@ -161,24 +163,7 @@ tilmap.calcTILfun=function(){
             document.head.appendChild(s)
         }else{tammy(ev)}
     }
-    /*
-    cancerTilRange.onchange=function(){
-        tilmap.cvBase.hidden=false
-        tilmap.img.hidden=true
-        var cm=jmat.colormap()
-        var k = parseInt(this.value)/100 //slider value
-        var ddd = tilmap.imgData.map(function(dd){
-            return dd.map(function(d){
-                var r = k*d[0]/255
-                var g = (1-k)*d[1]/255
-                return cm[Math.round((r+g)*63)].map(x=>Math.round(x*255)).concat(d[2])
-                //debugger
-            })
-        })
-        jmat.imwrite(tilmap.cvBase,ddd)
-        //debugger
-    }
-    */
+    setTimeout(function(){cancerTilRange.onchange()},1000)
 }
 
 tilmap.from2D=function(dd){
