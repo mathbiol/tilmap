@@ -128,7 +128,7 @@ tilmap.calcTILfun=function(){
             this.style.backgroundColor="orange"
             if(this.value==""){cancerTilRange.value=tilmap.parms.range}
             tilmap.parms.t = setInterval(function(){
-                cancerTilRange.value=parseInt(cancerTilRange.value)+2
+                cancerTilRange.value=parseInt(cancerTilRange.value)+5
                 cancerTilRange.onchange()
                 //console.log(cancerTilRange.value)
                 if(parseInt(cancerTilRange.value)>=100){
