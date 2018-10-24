@@ -9,7 +9,8 @@ tammy = function (event) {
     var ifrm = document.getElementById('caMicrocopeIfr');
     var url = getUrl(clickPositionX, clickPositionY, ifrm);
     console.log('url', url);
-    ifrm.src = url;
+    //Uncomment when ready
+    //ifrm.src = url;
 
 };
 

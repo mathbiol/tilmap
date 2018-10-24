@@ -37,7 +37,7 @@ tilmap.ui=function(div){
     tilmap.selTumorType.onchange=()=>{ // update tissue list
         tilmap.optTissue();
         tilmap.showTIL()
-    } 
+    }
     tilmap.selTumorTissue.onchange=tilmap.showTIL
     tilmap.selTumorType.onclick=tilmap.selTumorTissue.onclick=function(){
         if(rangePlay.textContent=="Stop"){
@@ -86,7 +86,7 @@ tilmap.showTIL=function(){ // get image and display it
     var url=location.href+'TIL_maps_before_thres_v2/'+tilmap.selTumorType.value+'/'+tilmap.selTumorTissue.value
     var h='<div><img id="imgTIL" src='+url+'></div><div><a href="'+url+'" target="_blank">'+url+'</a></div>'
     var h = '<table>'
-    h += '<tr><td style="vertical-align:top"><img id="imgTIL" src='+url+'></td><td id="calcTIL" style="vertical-align:top">... interactive analytics goes here ...</td></tr>'
+    h += '<tr><td style="vertical-align:top"><div id="imgTILDiv"><img id="imgTIL" src='+url+'></div></td><td id="calcTIL" style="vertical-align:top">... interactive analytics goes here ...</td></tr>'
     h += '<tr><td><a href="'+url+'" target="_blank" style="font-size:small">'+url+'</a></td><td>'+Date().slice(0,24)+'</td></tr>'
     h += '</table>'
     //h += '<iframe id="caMicrocopeIfr" width="100%" height="100%" src="http://quip1.uhmc.sunysb.edu:443/camicroscope/osdCamicroscope.php?tissueId='+tilmap.selTumorTissue.value.replace('.png','')+'">'
@@ -188,14 +188,17 @@ tilmap.calcTILfun=function(){
     }
     tilmap.img.onload() // start image
     //cancerTilRange.onchange() // start range
-    tilmap.img.onclick=function(ev){
+    var imgTILDiv = document.getElementById('imgTILDiv')
+    imgTILDiv.onclick=function(ev){
+    //tilmap.img.onclick=function(ev){
         if(typeof(tammy)=="undefined"){
             var s=document.createElement('script')
             s.src="tammy.js"
-            s.onload=function(){tammy(ev)} 
+            s.onload=function(){tammy(ev)}
             document.head.appendChild(s)
         }else{tammy(ev)}
     }
+
     setTimeout(function(){cancerTilRange.onchange()},1000)
 }
 
