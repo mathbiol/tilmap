@@ -39,6 +39,13 @@ tilmap.ui=function(div){
         tilmap.showTIL()
     } 
     tilmap.selTumorTissue.onchange=tilmap.showTIL
+    tilmap.selTumorType.onclick=tilmap.selTumorTissue.onclick=function(){
+        if(rangePlay.textContent=="Stop"){
+            rangePlay.click()
+        }
+
+        //debugger
+    }
     //setTimeout(tilmap.showTIL,1000)
 }
 
@@ -111,9 +118,29 @@ tilmap.calcTILfun=function(){
     h += '<p><button id="calcTILgreen" style="background-color:green"> Green channel </button></p>'
     h += '<p><button id="calcTILblue" style="background-color:cyan"> Blue channel </button></p>'
     h += '<p><button id="calcTIL0" style="background-color:white"> original png </button></p>'
-    h += '<p><input id="cancerTilRange" type="range" style="width:200px"><br>Tumor <---(prediction)---> TIL</p>'
+    h += '<p><input id="cancerTilRange" type="range" style="width:200px"><br>Tumor <---(prediction)---> TIL'
+    h += '<br><button id="rangePlay" style="background-color:lime">Play</button></p>'
     tilmap.calcTILdiv.innerHTML=h
     cancerTilRange.value=tilmap.parms.range
+    rangePlay.onclick=function(){
+        if(this.textContent=="Play"){
+            this.textContent="Stop"
+            this.style.backgroundColor="orange"
+            if(this.value==""){cancerTilRange.value=tilmap.parms.range}
+            tilmap.parms.t = setInterval(function(){
+                cancerTilRange.value=parseInt(cancerTilRange.value)+2
+                cancerTilRange.onchange()
+                //console.log(cancerTilRange.value)
+                if(parseInt(cancerTilRange.value)>=100){
+                    cancerTilRange.value="0"
+                }
+            },100)
+        }else{
+            clearInterval(tilmap.parms.t)
+            this.textContent="Play"
+            this.style.backgroundColor="lime"
+        }
+    }
     // read the image data
     tilmap.img = tilmap.div.querySelector('#imgTIL')
     tilmap.img.onload=function(){
