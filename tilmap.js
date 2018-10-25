@@ -89,7 +89,6 @@ tilmap.showTIL=function(){ // get image and display it
     h += '<tr><td style="vertical-align:top"><div id="imgTILDiv"><img id="imgTIL" src='+url+'></div></td><td id="calcTIL" style="vertical-align:top">... interactive analytics goes here ...</td></tr>'
     h += '<tr><td><a href="'+url+'" target="_blank" style="font-size:small">'+url+'</a></td><td>'+Date().slice(0,24)+'</td></tr>'
     h += '</table>'
-    //h += '<iframe id="caMicrocopeIfr" width="100%" height="100%" src="http://quip1.uhmc.sunysb.edu:443/camicroscope/osdCamicroscope.php?tissueId='+tilmap.selTumorTissue.value.replace('.png','')+'">'
     h += '<iframe id="caMicrocopeIfr" width="100%" height="100%" src="https://quip1.bmi.stonybrook.edu:8443/camicroscope/osdCamicroscope.php?tissueId='+tilmap.selTumorTissue.value.replace('.png','')+'">'
     tilmap.tilShowImgDiv.innerHTML=h
     tilmap.tilShowImgDiv.style.color='navy'
@@ -102,6 +101,7 @@ tilmap.showTIL=function(){ // get image and display it
     var td = tilmap.div.querySelector('#calcTIL')
     td.innerHTML=h2
     tilmap.calcTILdiv=tilmap.div.querySelector('#calcTILdiv')
+    var imgTILDiv = document.getElementById('imgTILDiv')
     if(typeof(jmat)!=="undefined"){
         tilmap.calcTILfun()
     }else{
@@ -110,6 +110,19 @@ tilmap.showTIL=function(){ // get image and display it
         s.onload=tilmap.calcTILfun
         document.head.appendChild(s)
     }
+}
+
+tilmap.tammy=function(){ // event listener pointing to tammy's code
+    imgTILDiv.onclick=function(ev){
+    //tilmap.img.onclick=function(ev){
+        if(typeof(tammy)=="undefined"){
+            var s=document.createElement('script')
+            s.src="tammy.js"
+            s.onload=function(){tammy(ev)}
+            document.head.appendChild(s)
+        }else{tammy(ev)}
+    }
+    return tilmap.calcTILdiv
 }
 
 tilmap.calcTILfun=function(){
@@ -121,6 +134,7 @@ tilmap.calcTILfun=function(){
     h += '<p><input id="cancerTilRange" type="range" style="width:200px"><br>Tumor <---(prediction)---> TIL'
     h += '<br><button id="rangePlay" style="background-color:lime">Play</button></p>'
     tilmap.calcTILdiv.innerHTML=h
+    tilmap.tammy()
     cancerTilRange.value=tilmap.parms.range
     rangePlay.onclick=function(){
         if(this.textContent=="Play"){
@@ -188,16 +202,7 @@ tilmap.calcTILfun=function(){
     }
     tilmap.img.onload() // start image
     //cancerTilRange.onchange() // start range
-    var imgTILDiv = document.getElementById('imgTILDiv')
-    imgTILDiv.onclick=function(ev){
-    //tilmap.img.onclick=function(ev){
-        if(typeof(tammy)=="undefined"){
-            var s=document.createElement('script')
-            s.src="tammy.js"
-            s.onload=function(){tammy(ev)}
-            document.head.appendChild(s)
-        }else{tammy(ev)}
-    }
+    
 
     setTimeout(function(){cancerTilRange.onchange()},1000)
 }
