@@ -8,7 +8,7 @@ tammy = function (event) {
     var clickPositionY = event.clientY;
     var ifrm = document.getElementById('caMicrocopeIfr');
     var url = getUrl(clickPositionX, clickPositionY, ifrm);
-    console.log('url', url);
+    console.log('URL:', url);
     //Uncomment when ready
     //ifrm.src = url;
 
@@ -19,31 +19,35 @@ function getUrl(clickPositionX, clickPositionY, ifrm) {
     // Domain could change in main program, so get existing url
     var loc = ifrm.src;
     console.log("loc", loc);
-    // If we added location parameters already
+
+    // Reset the URL if we already added location parameters
     if (loc.indexOf('&x=') > -1)
         loc = loc.substring(0, loc.indexOf('&x='));
-    var coords = getCoordinates(clickPositionX, clickPositionY);
-    return loc + "&x=" + coords.x + "&y=" + coords.y;
 
-}
-
-function getCoordinates(clickPositionX, clickPositionY) {
+    // Calculate position coordinates
 
     // Image Size
     var img = document.getElementsByTagName('canvas')[0];
     var imgWidth = img.width;
+    var imgHeight = img.height;
+
+    // iFrame size
+    var frmWidth = ifrm.width;
+    var frmHeight = ifrm.height;
+
+    // Cross-Domain not allowed.
+    //console.log("scrollHeight", ifrm.contentWindow.document.body.scrollHeight);
+
+    var factor1 = frmWidth / imgWidth;
+    var factor2 = frmHeight / imgHeight;
 
     // Convert to viewport coordinates
-    var viewportX = clickPositionX / imgWidth;
-    var viewportY = clickPositionY / imgWidth;
+    var viewportPtX = clickPositionX * factor1;
+    var viewportPtY = clickPositionY * factor2;
 
-    // TODO: GET SLIDE DATA
-    var imgWidth = 135168;
-    var imgHeight = 105472;
+    // {'x': Math.round(xx), 'y': Math.round(yy)};
 
-    var xx = imgWidth * viewportX;
-    var yy = imgHeight * viewportY;
-
-    return {'x': Math.round(xx), 'y': Math.round(yy)};
+    return loc + "&x=" + viewportPtX + "&y=" + viewportPtY;
 
 }
+
