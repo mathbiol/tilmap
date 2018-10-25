@@ -10,7 +10,6 @@ tammy = function (event) {
 
     // Domain could change in main program, so get existing url
     var loc = ifrm.src;
-    console.log("loc", loc);
 
     // Reset the URL if we already added location parameters
     if (loc.indexOf('&x=') > -1)
@@ -29,7 +28,7 @@ tammy = function (event) {
         var w_h = x[tissue];
         var factor1 = w_h.width / imgWidth;
         var factor2 = w_h.height / imgHeight;
-        var url = loc + "&x=" + Math.ceil(clickPositionX * factor1) + "&y=" + Math.ceil(clickPositionY * factor2);
+        var url = loc + "&x=" + Math.ceil(clickPositionX * factor1) + "&y=" + Math.ceil(clickPositionY * factor2) + "&zoom=2";
         console.log('URL:', url);
         ifrm.src = url;
         return url;
