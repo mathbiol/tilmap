@@ -28,10 +28,22 @@ tammy = function (event) {
         var w_h = x[tissue];
         var factor1 = w_h.width / imgWidth;
         var factor2 = w_h.height / imgHeight;
-        var url = loc + "&x=" + Math.ceil(clickPositionX * factor1) + "&y=" + Math.ceil(clickPositionY * factor2) + "&zoom=2";
-        console.log('URL:', url);
-        ifrm.src = url;
-        return url;
+
+        // Test for infinity
+        if (Math.ceil(clickPositionX * factor1) === Infinity) {
+            console.log("Infinity!!");
+            console.log("tissue", tissue);
+            console.log("tissue w,h", w_h);
+            console.log("factor1,2", factor1, factor2);
+            console.log("clickPositionX,Y", clickPositionX, clickPositionY);
+        }
+        else
+        {
+            var url = loc + "&x=" + Math.ceil(clickPositionX * factor1) + "&y=" + Math.ceil(clickPositionY * factor2) + "&zoom=2";
+            console.log('URL:', url);
+            ifrm.src = url;
+
+        }
 
     });
 
