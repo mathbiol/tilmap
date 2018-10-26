@@ -127,12 +127,12 @@ tilmap.tammy=function(){ // event listener pointing to tammy's code
 
 tilmap.calcTILfun=function(){
     var h=' Decode RGB maps:'
-    h += '<p><button id="calcTILred" style="background-color:red"> Red channel </button></p>'
-    h += '<p><button id="calcTILgreen" style="background-color:green"> Green channel </button></p>'
-    h += '<p><button id="calcTILblue" style="background-color:cyan"> Blue channel </button></p>'
-    h += '<p><button id="calcTIL0" style="background-color:white"> original png </button></p>'
-    h += '<p><input id="cancerTilRange" type="range" style="width:200px"><br>Tumor <---(prediction)---> TIL'
-    h += '<br><button id="rangePlay" style="background-color:lime">Play</button></p>'
+    h += '<p> <button id="calcTILred" style="background-color:red"> Red channel </button></span> '
+    h += '<span> <button id="calcTILgreen" style="background-color:green"> Green channel </button></span> '
+    h += '<span> <button id="calcTILblue" style="background-color:cyan"> Blue channel </button></span> '
+    h += '<span> <button id="calcTIL0" style="background-color:white"> original png </button></p> '
+    h += '<p> <input id="cancerTilRange" type="range" style="width:200px"> <button id="rangePlay" style="background-color:lime">Play</button>'
+    h += '<br>Tumor <---(prediction)---> TIL</p>'
     tilmap.calcTILdiv.innerHTML=h
     tilmap.tammy()
     cancerTilRange.value=tilmap.parms.range
