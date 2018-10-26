@@ -7,18 +7,9 @@ tammy = function (event) {
     var clickPositionX = event.clientX;
     var clickPositionY = event.clientY;
     var ifrm = document.getElementById('caMicrocopeIfr');
-    var url = getUrl(clickPositionX, clickPositionY, ifrm);
-    console.log('URL:', url);
-    //Uncomment when ready
-    //ifrm.src = url;
-
-};
-
-function getUrl(clickPositionX, clickPositionY, ifrm) {
 
     // Domain could change in main program, so get existing url
     var loc = ifrm.src;
-    console.log("loc", loc);
 
     // Reset the URL if we already added location parameters
     if (loc.indexOf('&x=') > -1)
@@ -31,23 +22,35 @@ function getUrl(clickPositionX, clickPositionY, ifrm) {
     var imgWidth = img.width;
     var imgHeight = img.height;
 
-    // iFrame size
-    var frmWidth = ifrm.width;
-    var frmHeight = ifrm.height;
+    // Get slide dimensions
+    tammy.getFile('slidemeta.json').then(x => {
+        var tissue = tilmap.selTumorTissue.value.slice(0, -4);
+        var w_h = x[tissue];
+        var factor1 = w_h.width / imgWidth;
+        var factor2 = w_h.height / imgHeight;
 
-    // Cross-Domain not allowed.
-    //console.log("scrollHeight", ifrm.contentWindow.document.body.scrollHeight);
+        // Test for infinity
+        if (Math.ceil(clickPositionX * factor1) === Infinity) {
+            console.log("Infinity!!");
+            console.log("tissue", tissue);
+            console.log("tissue w,h", w_h);
+            console.log("factor1,2", factor1, factor2);
+            console.log("clickPositionX,Y", clickPositionX, clickPositionY);
+        }
+        else
+        {
+            var url = loc + "&x=" + Math.ceil(clickPositionX * factor1) + "&y=" + Math.ceil(clickPositionY * factor2) + "&zoom=2";
+            console.log('URL:', url);
+            ifrm.src = url;
 
-    var factor1 = frmWidth / imgWidth;
-    var factor2 = frmHeight / imgHeight;
+        }
 
-    // Convert to viewport coordinates
-    var viewportPtX = clickPositionX * factor1;
-    var viewportPtY = clickPositionY * factor2;
+    });
 
-    // {'x': Math.round(xx), 'y': Math.round(yy)};
+};
 
-    return loc + "&x=" + viewportPtX + "&y=" + viewportPtY;
-
-}
+tammy.getFile = async function (url) {
+    url = url || 'slidemeta.json';
+    return (await fetch(url)).json()
+};
 

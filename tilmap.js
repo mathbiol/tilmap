@@ -83,7 +83,7 @@ tilmap.index=function(x){
 }
 
 tilmap.showTIL=function(){ // get image and display it
-    var url=location.origin+location.pathname+'TIL_maps_before_thres_v2/'+tilmap.selTumorType.value+'/'+tilmap.selTumorTissue.value
+    var url='TIL_maps_before_thres_v2/'+tilmap.selTumorType.value+'/'+tilmap.selTumorTissue.value
     var h='<div><img id="imgTIL" src='+url+'></div><div><a href="'+url+'" target="_blank">'+url+'</a></div>'
     var h = '<table>'
     h += '<tr><td style="vertical-align:top"><div id="imgTILDiv"><img id="imgTIL" src='+url+'></div></td><td id="calcTIL" style="vertical-align:top">... interactive analytics goes here ...</td></tr>'
@@ -202,7 +202,7 @@ tilmap.calcTILfun=function(){
     }
     tilmap.img.onload() // start image
     //cancerTilRange.onchange() // start range
-    
+
 
     setTimeout(function(){cancerTilRange.onchange()},1000)
 }
