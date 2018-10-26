@@ -39,7 +39,7 @@ tammy = function (event) {
         }
         else
         {
-            var url = loc + "&x=" + Math.ceil(clickPositionX * factor1) + "&y=" + Math.ceil(clickPositionY * factor2) + "&zoom=2";
+            var url = loc + "&x=" + Math.ceil(clickPositionX * factor1) + "&y=" + Math.ceil(clickPositionY * factor2) + "&zoom=8";
             console.log('URL:', url);
             ifrm.src = url;
 
