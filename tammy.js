@@ -29,7 +29,7 @@ tammy = function (event) {
         if (loc.indexOf('&x=') > -1)
             loc = loc.substring(0, loc.indexOf('&x='));
 
-        let url = loc + "&x=" + Math.ceil(pos_x * factor1) + "&y=" + Math.ceil(pos_y * factor2) + "&zoom=2";
+        let url = loc + "&x=" + Math.ceil(pos_x * factor1) + "&y=" + Math.ceil(pos_y * factor2) + "&zoom=5";
         console.log('URL:', url);
         ifrm.src = url;
 
