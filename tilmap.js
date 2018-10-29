@@ -206,7 +206,8 @@ tilmap.calcTILfun=function(){
             jmat.imwrite(tilmap.cvBase,ddd)
             //debugger
         }
-        setTimeout(function(){cancerTilRange.onchange()},1000)
+        cancerTilRange.onchange()
+        //setTimeout(function(){cancerTilRange.onchange()},1000)
         //cancerTilRange.onchange() // <-- start with the 50% mix
     }
     //tilmap.img.onload() // start image
