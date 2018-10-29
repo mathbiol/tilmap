@@ -183,7 +183,13 @@ tilmap.calcTILfun=function(){
         }
         //debugger
         tilmap.cvBase.onclick=tilmap.img.onclick
-        cancerTilRange.onclick=cancerTilRange.onchange=function(){
+        cancerTilRange.onclick=function(){
+            if(rangePlay.textContent=="Stop"){
+                rangePlay.click()
+            }
+        }
+        cancerTilRange.onchange=function(){
+            //debugger
             tilmap.cvBase.hidden=false
             tilmap.img.hidden=true
             var cm=jmat.colormap()
@@ -200,19 +206,20 @@ tilmap.calcTILfun=function(){
             jmat.imwrite(tilmap.cvBase,ddd)
             //debugger
         }
-        setTimeout(function(){cancerTilRange.onchange()},100)
+        setTimeout(function(){cancerTilRange.onchange()},1000)
         //cancerTilRange.onchange() // <-- start with the 50% mix
     }
     //tilmap.img.onload() // start image
     //cancerTilRange.onchange() // start range
 
 
-    setTimeout(function(){cancerTilRange.onchange()},1000)
+    //setTimeout(function(){cancerTilRange.onchange()},1000)
 }
 
 tilmap.from2D=function(dd){
     tilmap.cvBase.hidden=false
     tilmap.img.hidden=true
+    tilmap.cv2D=dd // keeping current value 2D slice 
     var cm=jmat.colormap()
     var k = 63/255 // png values are between 0-255 and cm 0-63
     var ddd = dd.map(function(d){
@@ -236,21 +243,32 @@ tilmap.imSlice=function(i){ // slice ith layer of imgData matrix
 }
 
 tilmap.segment=function(){
-    alert('under development')
+    //alert('under development')
     // create top canvas if it doesn't exist already
-    /*
+    
     if(!tilmap.cvTop){
         tilmap.cvTop=document.createElement('canvas')
         tilmap.cvTop.width=tilmap.img.width
         tilmap.cvTop.height=tilmap.img.height
         tilmap.cvTop.id="cvTop"
         tilmap.img.parentElement.appendChild(tilmap.cvTop)
+        tilmap.cvTop.style.position='absolute'
+        tilmap.canvasAlign()
     }
-    */
+    // generate mask
+    var sv = 2.55*parseInt(segmentationRange.value) // segmentation value
+
+
+    
         
         
-    //debugger
+    debugger
 }
+tilmap.canvasAlign=function(){
+    tilmap.cvTop.style.top=tilmap.cvBase.getBoundingClientRect().top
+    tilmap.cvTop.style.left=tilmap.cvBase.getBoundingClientRect().left
+}
+
 
 window.onload=tilmap
 
