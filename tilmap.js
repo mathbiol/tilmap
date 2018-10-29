@@ -133,9 +133,11 @@ tilmap.calcTILfun=function(){
     h += '<span> <button id="calcTIL0" style="background-color:white"> original png </button></p> '
     h += '<p> <input id="cancerTilRange" type="range" style="width:200px"> <button id="rangePlay" style="background-color:lime">Play</button>'
     h += '<br>Tumor <---(prediction)---> TIL</p>'
+    h += '<p> <input id="segmentationRange" type="range" style="width:200px"> <button id="rangeSegmentBt" style="background-color:lime">Segment</button></p>'
     tilmap.calcTILdiv.innerHTML=h
     tilmap.tammy()
     cancerTilRange.value=tilmap.parms.range
+    rangeSegmentBt.onclick=tilmap.segment
     rangePlay.onclick=function(){
         if(this.textContent=="Play"){
             this.textContent="Stop"
@@ -163,6 +165,7 @@ tilmap.calcTILfun=function(){
         tilmap.cvBase.hidden=true
         tilmap.cvBase.width=tilmap.img.width
         tilmap.cvBase.height=tilmap.img.height
+        tilmap.cvBase.id="cvBase"
         tilmap.img.parentElement.appendChild(tilmap.cvBase)
         tilmap.ctx=tilmap.cvBase.getContext('2d');
         tilmap.ctx.drawImage(this,0,0);
@@ -200,7 +203,7 @@ tilmap.calcTILfun=function(){
         setTimeout(function(){cancerTilRange.onchange()},100)
         //cancerTilRange.onchange() // <-- start with the 50% mix
     }
-    tilmap.img.onload() // start image
+    //tilmap.img.onload() // start image
     //cancerTilRange.onchange() // start range
 
 
@@ -232,4 +235,33 @@ tilmap.imSlice=function(i){ // slice ith layer of imgData matrix
     })
 }
 
+tilmap.segment=function(){
+    alert('under development')
+    // create top canvas if it doesn't exist already
+    /*
+    if(!tilmap.cvTop){
+        tilmap.cvTop=document.createElement('canvas')
+        tilmap.cvTop.width=tilmap.img.width
+        tilmap.cvTop.height=tilmap.img.height
+        tilmap.cvTop.id="cvTop"
+        tilmap.img.parentElement.appendChild(tilmap.cvTop)
+    }
+    */
+        
+        
+    //debugger
+}
+
 window.onload=tilmap
+
+
+// MIS
+
+tilmap.getRelative = async function(id,xy){ // converts relative to absolute coordinates
+    var url='https://quip1.bmi.stonybrook.edu:8443/camicroscope/api/Data/getImageInfoByCaseID.php?case_id='+id
+    return (await fetch(url)).json().then(info=>[xy[0]*info[0].width,xy[1]*info[0].height].map(c=>parseInt(c)))
+}
+
+// just a toy, whoever wrote the https://quip1.bmi.stonybrook.edu:8443/camicroscope/api/Data/getImageInfoByCaseID.php did not set the headers for CORS ... tsk tsk tsk
+// otherwise await tilmap.getRelative('TCGA-2F-A9KO-01Z-00-DX1',[0.2,0.8]) would return [27033, 84377] instead of 
+// "blocked by CORS policy: No 'Access-Control-Allow-Origin' header present" ... :-O 
