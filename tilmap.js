@@ -209,6 +209,13 @@ tilmap.calcTILfun=function(){
         cancerTilRange.onchange()
         //setTimeout(function(){cancerTilRange.onchange()},1000)
         //cancerTilRange.onchange() // <-- start with the 50% mix
+        tilmap.cvTop=document.createElement('canvas')
+        tilmap.cvTop.width=tilmap.img.width
+        tilmap.cvTop.height=tilmap.img.height
+        tilmap.cvTop.id="cvTop"
+        tilmap.img.parentElement.appendChild(tilmap.cvTop)
+        tilmap.cvTop.style.position='absolute'
+        tilmap.canvasAlign()
     }
     //tilmap.img.onload() // start image
     //cancerTilRange.onchange() // start range
@@ -247,24 +254,57 @@ tilmap.segment=function(){
     //alert('under development')
     // create top canvas if it doesn't exist already
     
-    if(!tilmap.cvTop){
-        tilmap.cvTop=document.createElement('canvas')
-        tilmap.cvTop.width=tilmap.img.width
-        tilmap.cvTop.height=tilmap.img.height
-        tilmap.cvTop.id="cvTop"
-        tilmap.img.parentElement.appendChild(tilmap.cvTop)
-        tilmap.cvTop.style.position='absolute'
-        tilmap.canvasAlign()
-    }
+    
     // generate mask
     var sv = 2.55*parseInt(segmentationRange.value) // segmentation value
+    var k = parseInt(cancerTilRange.value)/100 // range value
+    tilmap.segMask = tilmap.imgData.map(dd=>{
+          return dd.map(d=>{
+              return (d[0]*(k)+d[1]*(1-k))>sv
+          })
+    })
+    // find neighbors
+    var n = tilmap.imgData.length
+    var m = tilmap.imgData[0].length
+    tilmap.segNeig = [...Array(n)].map(_=>{
+        return [...Array(m)].map(_=>[0])
+    })
+    var dd=tilmap.segMask
+    for(var i=1;i<(n-1);i++){
+        for(var j=1;j<(m-1);j++){
+            4
+            tilmap.segNeig[i][j]=[dd[i-1][j-1],dd[i-1][j],dd[i-1][j+1],dd[i][j-1],dd[i][j],dd[i][j+1],dd[i+1][j-1],dd[i+1][j],dd[i+1][j+1]]
+        }
+    }
+    //tilmap.segNeig=
+    /*
+    tilmap.segNeig = tilmap.segMask.map(dd,i)=>{
+        dd.map((d,j)=>{
+            //return [dd[i-1][j-1],dd[i-1][j],dd[i-1][j+1],dd[i][j-1],dd[i][j],dd[i][j+1],dd[i+1][j-1],dd[i+1][j],dd[i+1][j+1]]
+        })
+    })
+    */
 
 
-    
-        
-        
-    debugger
+    // find edges
+    tilmap.segEdge = tilmap.segNeig.map(dd=>{
+        return dd.map(d=>{
+            var s=d.reduce((a,b)=>a+b)
+            return (s>3 & s<7)
+            //return d.reduce((a,b)=>Math.max(a,b))!=d.reduce((a,b)=>Math.min(a,b))
+        })
+    })
+    jmat.imwrite(tilmap.cvTop,tilmap.segEdge.map(dd=>{
+        return dd.map(d=>{
+            return [255,255,0,255].map(v=>v*d) // yellow
+            //return [255,255,255,255].map(v=>v*d) // white
+        })
+    }))
+
+    //console.log(tilmap.segNeig,tilmap.segEdge)
+
 }
+
 tilmap.canvasAlign=function(){
     tilmap.cvTop.style.top=tilmap.cvBase.getBoundingClientRect().top
     tilmap.cvTop.style.left=tilmap.cvBase.getBoundingClientRect().left
