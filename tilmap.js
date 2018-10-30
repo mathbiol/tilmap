@@ -261,7 +261,8 @@ tilmap.segment=function(){
     var k = parseInt(cancerTilRange.value)/100 // range value
     tilmap.segMask = tilmap.imgData.map(dd=>{
           return dd.map(d=>{
-              return (d[0]*(k)+d[1]*(1-k))>sv
+              //return (d[0]*(k)+d[1]*(1-k))>sv
+              return (d[0]*(k)*d[1]*(1-k))>sv
           })
     })
     // find neighbors
