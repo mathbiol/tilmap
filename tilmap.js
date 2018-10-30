@@ -217,6 +217,7 @@ tilmap.calcTILfun=function(){
         tilmap.cvTop.style.position='absolute'
         tilmap.canvasAlign()
     }
+    segmentationRange.onchange=rangeSegmentBt.onclick
     //tilmap.img.onload() // start image
     //cancerTilRange.onchange() // start range
 
