@@ -85,16 +85,28 @@ tilmap.index=function(x){
 tilmap.showTIL=function(){ // get image and display it
     var url='TIL_maps_before_thres_v2/'+tilmap.selTumorType.value+'/'+tilmap.selTumorTissue.value
     var h='<div><img id="imgTIL" src='+url+'></div><div><a href="'+url+'" target="_blank">'+url+'</a></div>'
+    
+    /*
     var h = '<table>'
     h += '<tr><td style="vertical-align:top"><div id="imgTILDiv"><img id="imgTIL" src='+url+'></div></td><td id="calcTIL" style="vertical-align:top">... interactive analytics goes here ...</td></tr>'
     h += '<tr><td><a href="'+url+'" target="_blank" style="font-size:small">'+url+'</a></td><td>'+Date().slice(0,24)+'</td></tr>'
     h += '</table>'
     h += '<iframe id="caMicrocopeIfr" width="100%" height="100%" src="https://quip1.bmi.stonybrook.edu:8443/camicroscope/osdCamicroscope.php?tissueId='+tilmap.selTumorTissue.value.replace('.png','')+'">'
+    */
+
+    var h = '<table>'
+    h += '<tr><td style="vertical-align:top"><div id="imgTILDiv"><img id="imgTIL" src='+url+'></div><a href="'+url+'" target="_blank" style="font-size:small">'+url+'</a></div><div id="calcTIL">...</div></td><td style="vertical-align:top"><iframe id="caMicrocopeIfr" width="800px" height="800px" src="https://quip1.bmi.stonybrook.edu:8443/camicroscope/osdCamicroscope.php?tissueId='+tilmap.selTumorTissue.value.replace('.png','')+'"></td></tr>'
+    h += '<tr><td></td><td>'+Date().slice(0,24)+'</td></tr>'
+    h += '<tr><td id="calcTILL" style="vertical-align:top">... interactive analytics goes here ...</td><td>2</td></tr>'
+    h += '</table>'
+    h += ''
+
     tilmap.tilShowImgDiv.innerHTML=h
     tilmap.tilShowImgDiv.style.color='navy'
     var dt=tilmap.tumorIndex[tilmap.selTumorType.value][tilmap.selTumorTissue.value]
 
-    var h2 ='<h3>Interactive Analytics</h3>'
+    //var h2 ='<h3>Interactive Analytics</h3>'
+    var h2 =''
     var url2='https://quip1.bmi.stonybrook.edu:8443/camicroscope/osdCamicroscope.php?tissueId='+tilmap.selTumorTissue.value.replace('.png','')
     //var url2='http://quip1.uhmc.sunysb.edu:443/camicroscope/osdCamicroscope.php?tissueId='+tilmap.selTumorTissue.value.replace('.png','')
     h2 += '<div id="calcTILdiv">CaMicroscope</div>'
@@ -110,6 +122,10 @@ tilmap.showTIL=function(){ // get image and display it
         s.onload=tilmap.calcTILfun
         document.head.appendChild(s)
     }
+    //tilmap.calcTILfun()
+    setTimeout(function(){
+        tilmap.img.onload()
+    },100)
 }
 
 tilmap.tammy=function(){ // event listener pointing to tammy's code
@@ -126,7 +142,8 @@ tilmap.tammy=function(){ // event listener pointing to tammy's code
 }
 
 tilmap.calcTILfun=function(){
-    var h=' Decode RGB maps:'
+    //var h=' Decode RGB maps:'
+    var h=''
     h += '<p> <button id="calcTILred" style="background-color:red"> Red channel </button></span> '
     h += '<span> <button id="calcTILgreen" style="background-color:green"> Green channel </button></span> '
     h += '<span> <button id="calcTILblue" style="background-color:cyan"> Blue channel </button></span> '
