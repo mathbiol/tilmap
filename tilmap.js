@@ -133,7 +133,11 @@ tilmap.calcTILfun=function(){
     h += '<span> <button id="calcTIL0" style="background-color:white"> original png </button></p> '
     h += '<p> <input id="cancerTilRange" type="range" style="width:200px"> <button id="rangePlay" style="background-color:lime">Play</button>'
     h += '<br>Tumor <---(prediction)---> TIL</p>'
-    h += '<p> <input id="segmentationRange" type="range" style="width:200px"> <button id="rangeSegmentBt" style="background-color:lime">Segment</button></p>'
+    h += '<p> <input id="segmentationRange" type="range" style="width:200px"> <button id="rangeSegmentBt" style="background-color:lime">Segment</button>'
+    h += '<br>0 <--- (threshold) ---> 1'
+    h += '<br> <input id="transparencyRange" type="range" style="width:200px" value=20>'
+    h += '<br>0 <--- (transparency) ---> 1</p>'
+    
     tilmap.calcTILdiv.innerHTML=h
     tilmap.tammy()
     cancerTilRange.value=tilmap.parms.range
@@ -217,7 +221,7 @@ tilmap.calcTILfun=function(){
         tilmap.cvTop.style.position='absolute'
         tilmap.canvasAlign()
     }
-    segmentationRange.onchange=rangeSegmentBt.onclick
+    segmentationRange.onchange=transparencyRange.onchange=rangeSegmentBt.onclick
     //tilmap.img.onload() // start image
     //cancerTilRange.onchange() // start range
 
@@ -257,8 +261,9 @@ tilmap.segment=function(){
     
     
     // generate mask
-    var sv = 2.55*parseInt(segmentationRange.value) // segmentation value
     var k = parseInt(cancerTilRange.value)/100 // range value
+    var sv = 2.55*parseInt(segmentationRange.value) // segmentation value
+    var tp = Math.round(2.55*parseInt(transparencyRange.value)) // range value
     tilmap.segMask = tilmap.imgData.map(dd=>{
           return dd.map(d=>{
               //return (d[0]*(k)+d[1]*(1-k))>sv
@@ -274,7 +279,6 @@ tilmap.segment=function(){
     var dd=tilmap.segMask
     for(var i=1;i<(n-1);i++){
         for(var j=1;j<(m-1);j++){
-            4
             tilmap.segNeig[i][j]=[dd[i-1][j-1],dd[i-1][j],dd[i-1][j+1],dd[i][j-1],dd[i][j],dd[i][j+1],dd[i+1][j-1],dd[i+1][j],dd[i+1][j+1]]
         }
     }
@@ -296,9 +300,17 @@ tilmap.segment=function(){
             //return d.reduce((a,b)=>Math.max(a,b))!=d.reduce((a,b)=>Math.min(a,b))
         })
     })
-    jmat.imwrite(tilmap.cvTop,tilmap.segEdge.map(dd=>{
-        return dd.map(d=>{
-            return [255,255,0,255].map(v=>v*d) // yellow
+    var clrEdge = [255,255,0,255-tp] // yellow
+    var clrMask = [255,255,255,tp]
+    jmat.imwrite(tilmap.cvTop,tilmap.segEdge.map((dd,i)=>{
+        return dd.map((d,j)=>{
+            var c =[0,0,0,0]
+            if(d){
+                c=clrEdge 
+            }else if(!tilmap.segMask[i][j]){
+                c=clrMask
+            }
+            return c
             //return [255,255,255,255].map(v=>v*d) // white
         })
     }))
