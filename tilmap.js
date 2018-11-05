@@ -123,9 +123,9 @@ tilmap.showTIL=function(){ // get image and display it
         document.head.appendChild(s)
     }
     //tilmap.calcTILfun()
-    setTimeout(function(){
-        tilmap.img.onload()
-    },100)
+    //setTimeout(function(){
+    //    tilmap.img.onload()
+    //},100)
 }
 
 tilmap.tammy=function(){ // event listener pointing to tammy's code
@@ -238,7 +238,8 @@ tilmap.calcTILfun=function(){
         tilmap.cvTop.style.position='absolute'
         tilmap.canvasAlign()
     }
-    segmentationRange.onchange=transparencyRange.onchange=rangeSegmentBt.onclick
+    segmentationRange.onchange=rangeSegmentBt.onclick
+    transparencyRange.onchange=tilmap.transpire
     //tilmap.img.onload() // start image
     //cancerTilRange.onchange() // start range
 
@@ -317,6 +318,8 @@ tilmap.segment=function(){
             //return d.reduce((a,b)=>Math.max(a,b))!=d.reduce((a,b)=>Math.min(a,b))
         })
     })
+    tilmap.transpire()
+    /*
     var clrEdge = [255,255,0,255-tp] // yellow
     var clrMask = [255,255,255,tp]
     jmat.imwrite(tilmap.cvTop,tilmap.segEdge.map((dd,i)=>{
@@ -331,9 +334,28 @@ tilmap.segment=function(){
             //return [255,255,255,255].map(v=>v*d) // white
         })
     }))
+    */
 
     //console.log(tilmap.segNeig,tilmap.segEdge)
 
+}
+
+tilmap.transpire=function(){
+    var tp = Math.round(2.55*parseInt(transparencyRange.value)) // range value
+    var clrEdge = [255,255,0,255-tp] // yellow
+    var clrMask = [255,255,255,tp]
+    jmat.imwrite(tilmap.cvTop,tilmap.segEdge.map((dd,i)=>{
+        return dd.map((d,j)=>{
+            var c =[0,0,0,0]
+            if(d){
+                c=clrEdge 
+            }else if(!tilmap.segMask[i][j]){
+                c=clrMask
+            }
+            return c
+            //return [255,255,255,255].map(v=>v*d) // white
+        })
+    }))
 }
 
 tilmap.canvasAlign=function(){
