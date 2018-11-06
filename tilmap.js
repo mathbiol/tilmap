@@ -52,7 +52,7 @@ tilmap.ui=function(div){
 
         //debugger
     }
-    //setTimeout(tilmap.showTIL,1000)
+    setTimeout(tilmap.showTIL,1000)
 }
 
 tilmap.optTissue=function(){ // fill Tissues once type is chosen
@@ -138,7 +138,7 @@ tilmap.calcTILfun=function(){
     h += '<span> <button id="calcTILblue" style="background-color:cyan"> Blue channel </button></span> '
     h += '<span> <button id="calcTIL0" style="background-color:white"> original png </button></p> '
     h += '<p> <input id="cancerTilRange" type="range" style="width:200px"> <button id="rangePlay" style="background-color:lime">Play</button>'
-    h += '<br>Tumor <---(prediction)---> TIL</p>'
+    h += '<br>Cancer <---(prediction)---> TIL</p>'
     h += '<p> <input id="segmentationRange" type="range" style="width:200px"> <button id="rangeSegmentBt" style="background-color:lime">Segment</button>'
     h += '<br>0 <--- (threshold) ---> 1'
     h += '<br> <input id="transparencyRange" type="range" style="width:200px" value=20>'
