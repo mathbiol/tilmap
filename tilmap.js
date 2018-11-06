@@ -138,11 +138,11 @@ tilmap.calcTILfun=function(){
     h += '<span> <button id="calcTILblue" style="background-color:cyan"> Blue channel </button></span> '
     h += '<span> <button id="calcTIL0" style="background-color:white"> original png </button></p> '
     h += '<p> <input id="cancerTilRange" type="range" style="width:200px"> <button id="rangePlay" style="background-color:lime">Play</button>'
-    h += '<br>Cancer <---(prediction)---> TIL</p>'
+    h += '<br>Cancer  &#8592 (prediction) &#8594 TIL</p>'
     h += '<p> <input id="segmentationRange" type="range" style="width:200px"> <button id="rangeSegmentBt" style="background-color:lime">Segment</button>'
-    h += '<br>0 <--- (threshold) ---> 1'
+    h += '<br>0 &#8592 (threshold) &#8594 1'
     h += '<br> <input id="transparencyRange" type="range" style="width:200px" value=20>'
-    h += '<br>0 <--- (transparency) ---> 1</p>'
+    h += '<br>0 &#8592 (transparency) &#8594 1</p>'
     
     tilmap.calcTILdiv.innerHTML=h
     tilmap.tammy()
