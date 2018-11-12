@@ -4,7 +4,7 @@ fs=require('fs')
 dirObj={}
 
 function writeCatalog(path){
-    path=path||"TIL_maps_before_thres_v2"
+    path=path||"PNGs"
     console.log('catalogging '+path)
     var ls=[]
     var h = '<ol>'

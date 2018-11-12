@@ -72,7 +72,7 @@ tilmap.getJSON=async function(url){
 
 tilmap.index=function(x){
     tilmap.tissueIndex={}
-    tilmap.tumorIndex=x.TIL_maps_before_thres_v2
+    tilmap.tumorIndex=x.PNGs
     for(var t in tilmap.tumorIndex){
         //tilmap.tissueIndex[c]={} // tumor type
         console.log('indexing '+t)
@@ -89,7 +89,7 @@ tilmap.index=function(x){
 }
 
 tilmap.showTIL=function(){ // get image and display it
-    var url='TIL_maps_before_thres_v2/'+tilmap.selTumorType.value+'/'+tilmap.selTumorTissue.value
+    var url='PNGs/'+tilmap.selTumorType.value+'/'+tilmap.selTumorTissue.value
     var h='<div><img id="imgTIL" src='+url+'></div><div><a href="'+url+'" target="_blank">'+url+'</a></div>'
     
     var h = '<div id="imgTILDiv"><img id="imgTIL" src='+url+'></div><a href="'+url+'" target="_blank" style="font-size:small">'+url+'</a></div><div id="calcTIL">...</div>'
