@@ -91,7 +91,7 @@ tilmap.index=function(x){
 tilmap.showTIL=function(){ // get image and display it
     var url='PNGs/'+tilmap.selTumorType.value+'/'+tilmap.selTumorTissue.value
     var h='<div><img id="imgTIL" src='+url+'></div><div><a href="'+url+'" target="_blank">'+url+'</a></div>'
-    
+
     var h = '<div id="imgTILDiv"><img id="imgTIL" src='+url+'></div><a href="'+url+'" target="_blank" style="font-size:small">'+url+'</a></div><div id="calcTIL">...</div>'
     tilmap.tilShowImgDiv.innerHTML=h
     tilmap.tilShowImgDiv.style.color='navy'
@@ -121,15 +121,15 @@ tilmap.showTIL=function(){ // get image and display it
     }
 }
 
-tilmap.tammy=function(){ // event listener pointing to tammy's code
+tilmap.zoom2loc=function(){ // event listener pointing to zoom2loc's code
     imgTILDiv.onclick=function(ev){
     //tilmap.img.onclick=function(ev){
-        if(typeof(tammy)=="undefined"){
+        if(typeof(zoom2loc)=="undefined"){
             var s=document.createElement('script')
-            s.src="tammy.js"
-            s.onload=function(){tammy(ev)}
+            s.src="zoom2loc.js"
+            s.onload=function(){zoom2loc(ev)}
             document.head.appendChild(s)
-        }else{tammy(ev)}
+        }else{zoom2loc(ev)}
     }
     return tilmap.calcTILdiv
 }
@@ -147,9 +147,9 @@ tilmap.calcTILfun=function(){
     h += '<br>0 &#8592 (threshold) &#8594 1'
     h += '<br> <input id="transparencyRange" type="range" style="width:200px" value=20>'
     h += '<br>0 &#8592 (transparency) &#8594 1</p>'
-    
+
     tilmap.calcTILdiv.innerHTML=h
-    tilmap.tammy()
+    tilmap.zoom2loc()
     cancerTilRange.value=tilmap.parms.range
     rangeSegmentBt.onclick=tilmap.segment
     rangePlay.onclick=function(){
@@ -243,7 +243,7 @@ tilmap.calcTILfun=function(){
 tilmap.from2D=function(dd){
     tilmap.cvBase.hidden=false
     tilmap.img.hidden=true
-    tilmap.cv2D=dd // keeping current value 2D slice 
+    tilmap.cv2D=dd // keeping current value 2D slice
     var cm=jmat.colormap()
     var k = 63/255 // png values are between 0-255 and cm 0-63
     var ddd = dd.map(function(d){
@@ -269,8 +269,8 @@ tilmap.imSlice=function(i){ // slice ith layer of imgData matrix
 tilmap.segment=function(){
     //alert('under development')
     // create top canvas if it doesn't exist already
-    
-    
+
+
     // generate mask
     var k = parseInt(cancerTilRange.value)/100 // range value
     var sv = 2.55*parseInt(segmentationRange.value) // segmentation value
@@ -319,7 +319,7 @@ tilmap.segment=function(){
         return dd.map((d,j)=>{
             var c =[0,0,0,0]
             if(d){
-                c=clrEdge 
+                c=clrEdge
             }else if(!tilmap.segMask[i][j]){
                 c=clrMask
             }
@@ -341,7 +341,7 @@ tilmap.transpire=function(){
         return dd.map((d,j)=>{
             var c =[0,0,0,0]
             if(d){
-                c=clrEdge 
+                c=clrEdge
             }else if(!tilmap.segMask[i][j]){
                 c=clrMask
             }
@@ -368,5 +368,5 @@ tilmap.getRelative = async function(id,xy){ // converts relative to absolute coo
 }
 
 // just a toy, whoever wrote the https://quip1.bmi.stonybrook.edu:8443/camicroscope/api/Data/getImageInfoByCaseID.php did not set the headers for CORS ... tsk tsk tsk
-// otherwise await tilmap.getRelative('TCGA-2F-A9KO-01Z-00-DX1',[0.2,0.8]) would return [27033, 84377] instead of 
-// "blocked by CORS policy: No 'Access-Control-Allow-Origin' header present" ... :-O 
+// otherwise await tilmap.getRelative('TCGA-2F-A9KO-01Z-00-DX1',[0.2,0.8]) would return [27033, 84377] instead of
+// "blocked by CORS policy: No 'Access-Control-Allow-Origin' header present" ... :-O

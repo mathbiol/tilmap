@@ -1,10 +1,10 @@
-console.log('tammy.js loaded');
+console.log('zoom2loc.js loaded');
 
 /**
  * This code is run when someone clicks on the png file.
  * It changes the location, zooming in the slide viewer.
  */
-tammy = function (event) {
+zoom2loc = function (event) {
 
     // Get click position
     pos_x = event.offsetX ? (event.offsetX) : event.pageX - document.getElementById("imgTILDiv").offsetLeft;
@@ -25,7 +25,7 @@ tammy = function (event) {
     }
 
     // Get slide dimensions
-    tammy.getFile('slidemeta.json').then(x => {
+    zoom2loc.getFile('slidemeta.json').then(x => {
         let slide = tilmap.selTumorTissue.value.slice(0, -4);
         let slideDim = x[slide];
         console.log("(slide width, height)", slideDim.width, slideDim.height);
@@ -54,8 +54,7 @@ tammy = function (event) {
 
 };
 
-tammy.getFile = async function (url) {
+zoom2loc.getFile = async function (url) {
     url = url || 'slidemeta.json';
     return (await fetch(url)).json()
 };
-
