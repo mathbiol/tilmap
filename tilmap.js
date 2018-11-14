@@ -367,6 +367,3 @@ tilmap.getRelative = async function(id,xy){ // converts relative to absolute coo
     return (await fetch(url)).json().then(info=>[xy[0]*info[0].width,xy[1]*info[0].height].map(c=>parseInt(c)))
 }
 
-// just a toy, whoever wrote the https://quip1.bmi.stonybrook.edu:8443/camicroscope/api/Data/getImageInfoByCaseID.php did not set the headers for CORS ... tsk tsk tsk
-// otherwise await tilmap.getRelative('TCGA-2F-A9KO-01Z-00-DX1',[0.2,0.8]) would return [27033, 84377] instead of
-// "blocked by CORS policy: No 'Access-Control-Allow-Origin' header present" ... :-O
