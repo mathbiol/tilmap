@@ -115,7 +115,8 @@ tilmap.showTIL=function(){ // get image and display it
         tilmap.calcTILfun()
     }else{
         var s = document.createElement('script')
-        s.src="https://jonasalmeida.github.io/jmat/jmat.js"
+        //s.src="https://jonasalmeida.github.io/jmat/jmat.js"
+        s.src="jmat.js"
         s.onload=tilmap.calcTILfun
         document.head.appendChild(s)
     }
