@@ -7,7 +7,10 @@ tilmap=function(){
 }
 
 tilmap.parms={
-    range:50
+    cancerRange:100,
+    tilRange:100,
+    transparency:20,
+    threshold:0
 }
 
 tilmap.ui=function(div){
@@ -46,8 +49,11 @@ tilmap.ui=function(div){
     }
     tilmap.selTumorTissue.onchange=tilmap.showTIL
     tilmap.selTumorType.onclick=tilmap.selTumorTissue.onclick=function(){
-        if(rangePlay.textContent=="Stop"){
-            rangePlay.click()
+        if(cancerRangePlay.style.backgroundColor=="orange"){
+            cancerRangePlay.click()
+        }
+        if(tilRangePlay.style.backgroundColor=="orange"){
+            tilRangePlay.click()
         }
 
         //debugger
@@ -142,33 +148,48 @@ tilmap.calcTILfun=function(){
     h += '<span> <button id="calcTILgreen" style="background-color:green"> Green channel </button></span> '
     h += '<span> <button id="calcTILblue" style="background-color:cyan"> Blue channel </button></span> '
     h += '<span> <button id="calcTIL0" style="background-color:white"> original png </button></p> '
-    h += '<p> <input id="cancerTilRange" type="range" style="width:200px"> <button id="rangePlay" style="background-color:lime">Play</button>'
-    h += '<br>Cancer  &#8592 (prediction) &#8594 TIL</p>'
-    h += '<p> <input id="segmentationRange" type="range" style="width:200px"> <button id="rangeSegmentBt" style="background-color:lime">Segment</button>'
-    h += '<br>0 &#8592 (threshold) &#8594 1'
-    h += '<br> <input id="transparencyRange" type="range" style="width:200px" value=20>'
-    h += '<br>0 &#8592 (transparency) &#8594 1</p>'
+    h += '<p><span><input id="cancerRange" type="range" style="width:200px"> <button id="cancerRangePlay" style="background-color:lime">Cancer</button></span>'
+    h += '<br><input id="tilRange" type="range" style="width:200px"> <button id="tilRangePlay" style="background-color:lime">TIL</button></p>'
+    
+    h += '<span style="font-size:small;color:gray">... additional classifications will be available here ...</span>'
+    // h += '<br>Cancer  &#8592 (prediction) &#8594 TIL</p>'
+    h += '<p> <input id="segmentationRange" type="range" style="width:200px" value='+tilmap.parms.threshold+'> <button id="rangeSegmentBt" hidden="true" style="background-color:lime">Segment</button>'
+    h += '<br>&nbsp;&nbsp;&nbsp;<span style="font-size:small"> 0 &#8592(segmentation threshold)&#8594 1</span>'
+    h += '<br> <input id="transparencyRange" type="range" style="width:200px" value='+tilmap.parms.transparency+'>'
+    h += '<br><span style="font-size:small">&nbsp; 0 &#8592 (segmentation transparency) &#8594 1<s/pan></p>'
+    h += '<hr> <select><option>add more classifications</option><option>(under development)</option></select>'
 
     tilmap.calcTILdiv.innerHTML=h
     tilmap.zoom2loc()
-    cancerTilRange.value=tilmap.parms.range
+    cancerRange.value=tilmap.parms.cancerRange
+    tilRange.value=tilmap.parms.tilRange
     rangeSegmentBt.onclick=tilmap.segment
-    rangePlay.onclick=function(){
-        if(this.textContent=="Play"){
-            this.textContent="Stop"
+    cancerRangePlay.onclick=tilRangePlay.onclick=function(){
+        // make sure the other play is stopped
+        if((this.id=="cancerRangePlay")&(tilRangePlay.style.backgroundColor=="orange")){
+            tilRangePlay.click()
+        }
+        if((this.id=="tilRangePlay")&(cancerRangePlay.style.backgroundColor=="orange")){
+            cancerRangePlay.click()
+        } 
+
+
+        var range = document.getElementById(this.id.slice(0,-4)) // range input for this button
+        if(this.style.backgroundColor=="lime"){
             this.style.backgroundColor="orange"
-            if(this.value==""){cancerTilRange.value=tilmap.parms.range}
+            if(range.value==""){range.value=tilmap.parms[range.id]}
             tilmap.parms.t = setInterval(function(){
-                cancerTilRange.value=parseInt(cancerTilRange.value)+5
-                cancerTilRange.onchange()
+                range.value=parseInt(range.value)+5
                 //console.log(cancerTilRange.value)
-                if(parseInt(cancerTilRange.value)>=100){
-                    cancerTilRange.value="0"
+                if(parseInt(range.value)>=100){
+                    range.value="0"
                 }
+                tilmap.parms[range.id]=range.value
+                range.onchange()
             },100)
         }else{
             clearInterval(tilmap.parms.t)
-            this.textContent="Play"
+            //this.textContent="Play"
             this.style.backgroundColor="lime"
         }
     }
@@ -198,30 +219,44 @@ tilmap.calcTILfun=function(){
         }
         //debugger
         tilmap.cvBase.onclick=tilmap.img.onclick
-        cancerTilRange.onclick=function(){
-            if(rangePlay.textContent=="Stop"){
-                rangePlay.click()
-            }
-        }
-        cancerTilRange.onchange=function(){
+        
+        cancerRange.onchange=tilRange.onchange=function(){
             //debugger
             tilmap.cvBase.hidden=false
             tilmap.img.hidden=true
             var cm=jmat.colormap()
-            var k = parseInt(this.value)/100 //slider value
-            tilmap.parms.range=this.value
+            //var k = parseInt(this.value)/100 //slider value
+            var cr=parseInt(cancerRange.value)/100
+            var tr=parseInt(tilRange.value)/100
+            tilmap.parms[this.id]=this.value
             var ddd = tilmap.imgData.map(function(dd){
                 return dd.map(function(d){
-                    var r = k*d[0]/255
-                    var g = (1-k)*d[1]/255
-                    return cm[Math.round((r+g)*63)].map(x=>Math.round(x*255)).concat(d[2])
+                    //var r = k*d[0]/255
+                    //var g = (1-k)*d[1]/255
+                    //return cm[Math.round((r+g)*63)].map(x=>Math.round(x*255)).concat(d[2])
+                    return cm[Math.round((Math.max(d[1]*cr,d[0]*tr)/255)*63)].map(x=>Math.round(x*255)).concat(d[2])
                     //debugger
                 })
             })
             jmat.imwrite(tilmap.cvBase,ddd)
             //debugger
         }
-        cancerTilRange.onchange()
+
+        // making sure clicking stops play and actas as onchange
+        cancerRange.onclick=function(){
+            if(cancerRangePlay.style.backgroundColor=="orange"){
+                cancerRangePlay.onclick()
+            }
+            cancerRange.onchange()
+        }
+        tilRange.onclick=function(){
+            if(tilRangePlay.style.backgroundColor=="orange"){
+                tilRangePlay.onclick()
+            }
+            tilRange.onchange()
+        }
+
+        cancerRange.onchange()
         //setTimeout(function(){cancerTilRange.onchange()},1000)
         //cancerTilRange.onchange() // <-- start with the 50% mix
         tilmap.cvTop=document.createElement('canvas')
@@ -231,8 +266,9 @@ tilmap.calcTILfun=function(){
         tilmap.img.parentElement.appendChild(tilmap.cvTop)
         tilmap.cvTop.style.position='absolute'
         tilmap.canvasAlign()
+        tilmap.segment()
     }
-    segmentationRange.onchange=rangeSegmentBt.onclick
+    segmentationRange.onchange=tilmap.segment //rangeSegmentBt.onclick
     transparencyRange.onchange=tilmap.transpire
     //tilmap.img.onload() // start image
     //cancerTilRange.onchange() // start range
@@ -268,18 +304,14 @@ tilmap.imSlice=function(i){ // slice ith layer of imgData matrix
 }
 
 tilmap.segment=function(){
-    //alert('under development')
-    // create top canvas if it doesn't exist already
-
-
     // generate mask
-    var k = parseInt(cancerTilRange.value)/100 // range value
+    var k = parseInt(cancerRange.value)/100 // range value
     var sv = 2.55*parseInt(segmentationRange.value) // segmentation value
     var tp = Math.round(2.55*parseInt(transparencyRange.value)) // range value
     tilmap.segMask = tilmap.imgData.map(dd=>{
           return dd.map(d=>{
               //return (d[0]*(k)+d[1]*(1-k))>sv
-              return (d[0]*(k)+d[1]*(1-k))>sv
+              return (d[0]*(k)+d[1]*(1-k))>=sv
           })
     })
     // find neighbors
@@ -294,16 +326,6 @@ tilmap.segment=function(){
             tilmap.segNeig[i][j]=[dd[i-1][j-1],dd[i-1][j],dd[i-1][j+1],dd[i][j-1],dd[i][j],dd[i][j+1],dd[i+1][j-1],dd[i+1][j],dd[i+1][j+1]]
         }
     }
-    //tilmap.segNeig=
-    /*
-    tilmap.segNeig = tilmap.segMask.map(dd,i)=>{
-        dd.map((d,j)=>{
-            //return [dd[i-1][j-1],dd[i-1][j],dd[i-1][j+1],dd[i][j-1],dd[i][j],dd[i][j+1],dd[i+1][j-1],dd[i+1][j],dd[i+1][j+1]]
-        })
-    })
-    */
-
-
     // find edges
     tilmap.segEdge = tilmap.segNeig.map(dd=>{
         return dd.map(d=>{
@@ -313,24 +335,7 @@ tilmap.segment=function(){
         })
     })
     tilmap.transpire()
-    /*
-    var clrEdge = [255,255,0,255-tp] // yellow
-    var clrMask = [255,255,255,tp]
-    jmat.imwrite(tilmap.cvTop,tilmap.segEdge.map((dd,i)=>{
-        return dd.map((d,j)=>{
-            var c =[0,0,0,0]
-            if(d){
-                c=clrEdge
-            }else if(!tilmap.segMask[i][j]){
-                c=clrMask
-            }
-            return c
-            //return [255,255,255,255].map(v=>v*d) // white
-        })
-    }))
-    */
-
-    //console.log(tilmap.segNeig,tilmap.segEdge)
+    tilmap.parms.threshold=segmentationRange.value
 
 }
 
@@ -350,6 +355,7 @@ tilmap.transpire=function(){
             //return [255,255,255,255].map(v=>v*d) // white
         })
     }))
+    tilmap.parms.transparency=transparencyRange.value
 }
 
 tilmap.canvasAlign=function(){
