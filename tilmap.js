@@ -153,7 +153,7 @@ tilmap.calcTILfun=function(){
     
     h += '<span style="font-size:small;color:gray">... additional classifications will be available here ...</span>'
     // h += '<br>Cancer  &#8592 (prediction) &#8594 TIL</p>'
-    h += '<p> <input id="segmentationRange" type="range" style="width:200px" value='+tilmap.parms.threshold+'> <button id="rangeSegmentBt" hidden="true" style="background-color:lime">Segment</button>'
+    h += '<p> <input id="segmentationRange" type="range" style="width:200px" value='+tilmap.parms.threshold+'> <button id="rangeSegmentBt" style="background-color:lime">Segment</button>'
     h += '<br>&nbsp;&nbsp;&nbsp;<span style="font-size:small"> 0 &#8592(segmentation threshold)&#8594 1</span>'
     h += '<br> <input id="transparencyRange" type="range" style="width:200px" value='+tilmap.parms.transparency+'>'
     h += '<br><span style="font-size:small">&nbsp; 0 &#8592 (segmentation transparency) &#8594 1<s/pan></p>'
@@ -305,13 +305,17 @@ tilmap.imSlice=function(i){ // slice ith layer of imgData matrix
 
 tilmap.segment=function(){
     // generate mask
-    var k = parseInt(cancerRange.value)/100 // range value
+    //var k = parseInt(cancerRange.value)/100 // range value
+    var cr=parseInt(cancerRange.value)/100
+    var tr=parseInt(tilRange.value)/100
     var sv = 2.55*parseInt(segmentationRange.value) // segmentation value
     var tp = Math.round(2.55*parseInt(transparencyRange.value)) // range value
     tilmap.segMask = tilmap.imgData.map(dd=>{
           return dd.map(d=>{
               //return (d[0]*(k)+d[1]*(1-k))>sv
-              return (d[0]*(k)+d[1]*(1-k))>=sv
+              //return (d[0]*(k)+d[1]*(1-k))>=sv
+              return (Math.max(d[1]*cr,d[0]*tr))>=sv
+              //return cm[Math.round((Math.max(d[1]*cr,d[0]*tr)/255)*63)].map(x=>Math.round(x*255)).concat(d[2])
           })
     })
     // find neighbors
