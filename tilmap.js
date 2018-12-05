@@ -62,11 +62,15 @@ tilmap.ui=function(div){
     setTimeout(tilmap.showTIL,1000)
     searchInput.onkeyup=searchInput.onclick=tilmap.search
     if(location.hash.length>3){
+        var ts = location.hash.slice(1).split('/')
         setTimeout(function(){
-            var ts = location.hash.slice(1).split('/')
             tilmap.selTumorType.value=ts[0]
-            tilmap.selTumorTissue.value=ts[1]
-            tilmap.selTumorTissue.onchange()
+            tilmap.selTumorType.onchange()
+            setTimeout(function(){
+                tilmap.selTumorTissue.value=ts[1]
+                tilmap.selTumorTissue.onchange()
+            },0)
+                
             //debugger
         },1000)
         //debugger
