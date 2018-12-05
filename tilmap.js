@@ -169,7 +169,7 @@ tilmap.showTIL=function(){ // get image and display it
     var url2='https://quip1.bmi.stonybrook.edu:8443/camicroscope/osdCamicroscope.php?tissueId='+tilmap.selTumorTissue.value.replace('.png','')
     if(!tilmap.selTumorTissue.value.match('-')){ // to accomodate Han's new slides
         let id = tilmap.selTumorTissue.value.match(/\d+/)[0]
-        url2="http://quip3.bmi.stonybrook.edu/camicroscope/osdCamicroscope.php?tissueId="+id
+        url2="https://quip3.bmi.stonybrook.edu/camicroscope/osdCamicroscope.php?tissueId="+id
     }
     caMicrocopeIfr.src=url2
     //var url2='http://quip1.uhmc.sunysb.edu:443/camicroscope/osdCamicroscope.php?tissueId='+tilmap.selTumorTissue.value.replace('.png','')
