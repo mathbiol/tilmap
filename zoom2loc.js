@@ -12,7 +12,7 @@ zoom2loc = function (event) {
     clickPos.y = event.offsetY ? (event.offsetY) : event.pageY - document.getElementById("imgTILDiv").offsetTop;
     console.log("clickPos", clickPos);
 
-    // Image Size is on the canvas
+    // Get image size
     let canvases = document.getElementsByTagName("canvas");
     let imgDim = {};
     for (let i = 0; i < canvases.length; i++) {
@@ -24,15 +24,37 @@ zoom2loc = function (event) {
         }
     }
 
-    // Get slide dimensions
-    zoom2loc.getFile('slidemeta.json').then(x => {
-        let slide = tilmap.selTumorTissue.value.slice(0, -4);
-        let slideDim = x[slide];
-        console.log("slideDim", slideDim);
 
-        // Get current url
-        let ifrm = document.getElementById('caMicrocopeIfr');
-        let loc = ifrm.src;
+    // Get current url
+    let ifrm = document.getElementById('caMicrocopeIfr');
+    let loc = ifrm.src;
+
+    promiseA = async function (id) {
+        let tmp = loc.toString();
+        tmp = tmp.substring(0, tmp.indexOf(".edu")) + '.edu';
+        let url;
+        if (tmp.contains('quip1'))
+        {
+            url = tmp + ':443/quip-findapi?limit=10&db=quip&collection=images&find={"case_id":"' + id + '"}';
+        }
+        else
+        {
+            url = tmp + '/quip-findapi?limit=10&db=quip&collection=images&find={"case_id":"' + id + '"}';
+        }
+        return (await fetch(url)).json()
+    };
+
+    let slide = tilmap.selTumorTissue.value.slice(0, -4);
+    promiseB = promiseA(slide, [clickPos.x, clickPos.y]);
+
+    // Get slide dimensions
+    //zoom2loc.getFile('slidemeta.json').then(result => {
+    promiseB.then(function (result) {
+
+        let slideDim = {};
+        slideDim.width = result[0].width;
+        slideDim.height = result[0].height;
+        console.log("slideDim", slideDim);
 
         if (slideDim.width) {
             let scale = {};
@@ -53,9 +75,4 @@ zoom2loc = function (event) {
 
     });
 
-};
-
-zoom2loc.getFile = async function (url) {
-    url = url || 'slidemeta.json';
-    return (await fetch(url)).json()
 };
