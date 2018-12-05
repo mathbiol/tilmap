@@ -15,8 +15,9 @@ tilmap.parms={
 
 tilmap.ui=function(div){
     div=div||tilmap.div // default div
-    h='<table><tr><td style="vertical-align:top"><h3 style="color:maroon">Til Maps</h3>'
-    h+='from tumor type <select id="selTumorType"></select> select tissue <select id="selTumorTissue"></select>'
+    h='<table><tr><td style="vertical-align:top"><h3 style="color:maroon">Til Maps <span id="slideLink" style="color:blue;font-size:small;cursor:pointer">Link</span></h3>'
+    h+='<br><input id="searchInput" value="search" style="color:gray"> <span id="searchResults" style="font-size:small">...</span>'
+    h+='<br>from tumor type <select id="selTumorType"></select> select tissue <select id="selTumorTissue"></select>'
     /*
     var url = "https://quip1.bmi.stonybrook.edu:8443/camicroscope/osdCamicroscope.php?tissueId=TCGA-2F-A9KO-01Z-00-DX1"
     if(tilmap.selTumorTissue){
@@ -59,6 +60,34 @@ tilmap.ui=function(div){
         //debugger
     }
     setTimeout(tilmap.showTIL,1000)
+    searchInput.onkeyup=searchInput.onclick=tilmap.search
+}
+
+tilmap.search=function(){
+    if(this.style.color=="gray"){
+        this.style.color="navy"
+        this.value=""
+    }else{
+        if(this.value.length>2){
+            var res=[] // results
+            for(let t in tilmap.tumorIndex){
+                for(let s in tilmap.tumorIndex[t]){
+                    if(s.match(RegExp(this.value,'i'))){
+                        res.push(`<a href="#${t}/${s}" target="_blank">${t}/${s.replace('.png','')}</a>`)
+                    }
+                    //debugger
+                }   
+            }
+            if(res.length>0){
+                searchResults.innerHTML=res.join(', ')
+            }else{
+                searchResults.innerHTML=' no matches'
+            }
+            tilmap.canvasAlign()
+        }
+        
+    }
+    //debugger
 }
 
 tilmap.optTissue=function(){ // fill Tissues once type is chosen
@@ -275,6 +304,7 @@ tilmap.calcTILfun=function(){
 
 
     //setTimeout(function(){cancerTilRange.onchange()},1000)
+
 }
 
 tilmap.from2D=function(dd){
