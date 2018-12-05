@@ -75,6 +75,10 @@ tilmap.ui=function(div){
         },1000)
         //debugger
     }
+    slideLink.onclick=function(){
+        location.hash=`${location.hash=tilmap.selTumorType.value}/${tilmap.selTumorTissue.value}`
+        tilmap.copyToClipboard(location.href)
+    }
 
 }
 
@@ -104,6 +108,19 @@ tilmap.search=function(){
     }
     //debugger
 }
+
+tilmap.copyToClipboard = str => {
+  const el = document.createElement('textarea');
+  el.value = str;
+  document.body.appendChild(el);
+  el.select();
+  document.execCommand('copy');
+  document.body.removeChild(el);
+  slideLink.textContent='Link copied'
+  setTimeout(function(){
+      slideLink.textContent='Link'
+  },1000)
+};
 
 tilmap.optTissue=function(){ // fill Tissues once type is chosen
     tilmap.selTumorTissue.innerHTML="" // reset options
