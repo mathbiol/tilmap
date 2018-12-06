@@ -70,7 +70,7 @@ tilmap.ui=function(div){
                 tilmap.selTumorTissue.value=ts[1]
                 tilmap.selTumorTissue.onchange()
             },0)
-                
+
             //debugger
         },1000)
         //debugger
@@ -95,7 +95,7 @@ tilmap.search=function(){
                         res.push(`<a href="#${t}/${s}" target="_blank">${t}/${s.replace('.png','')}</a>`)
                     }
                     //debugger
-                }   
+                }
             }
             if(res.length>0){
                 searchResults.innerHTML=res.join(', ')
@@ -104,7 +104,7 @@ tilmap.search=function(){
             }
             tilmap.canvasAlign()
         }
-        
+
     }
     //debugger
 }
@@ -166,12 +166,24 @@ tilmap.showTIL=function(){ // get image and display it
 
     //var h2 ='<h3>Interactive Analytics</h3>'
     var h2 =''
-    var url2='https://quip1.bmi.stonybrook.edu:8443/camicroscope/osdCamicroscope.php?tissueId='+tilmap.selTumorTissue.value.replace('.png','')
-    if(!tilmap.selTumorTissue.value.match('-')){ // to accomodate Han's new slides
-        let id = tilmap.selTumorTissue.value.match(/\d+/)[0]
-        url2="https://quip3.bmi.stonybrook.edu/camicroscope/osdCamicroscope.php?tissueId="+id
+    // Set iFrame src
+    let url2;
+    if (obfuscatedId)
+    {
+        tilmap.getSlideData(tilmap.selTumorTissue.value.replace('.png','')).then(x => {
+            url2='/viewer.html?slideId='+x[0]['_id']['$oid']
+            caMicrocopeIfr.src=url2
+        })
     }
-    caMicrocopeIfr.src=url2
+    else
+    {
+        url2='https://quip1.bmi.stonybrook.edu:8443/camicroscope/osdCamicroscope.php?tissueId='+tilmap.selTumorTissue.value.replace('.png','')
+        if(!tilmap.selTumorTissue.value.match('-')){ // to accommodate Han's new slides
+            let id = tilmap.selTumorTissue.value.match(/\d+/)[0]
+            url2="https://quip3.bmi.stonybrook.edu/camicroscope/osdCamicroscope.php?tissueId="+id
+        }
+        caMicrocopeIfr.src=url2
+    }
     //var url2='http://quip1.uhmc.sunysb.edu:443/camicroscope/osdCamicroscope.php?tissueId='+tilmap.selTumorTissue.value.replace('.png','')
     h2 += '<div id="calcTILdiv">CaMicroscope</div>'
     var td = tilmap.div.querySelector('#calcTIL')
@@ -211,7 +223,7 @@ tilmap.calcTILfun=function(){
     h += '<span> <button id="calcTIL0" style="background-color:white"> original png </button></p> '
     h += '<p><span><input id="cancerRange" type="range" style="width:200px"> <button id="cancerRangePlay" style="background-color:lime">Cancer</button></span>'
     h += '<br><input id="tilRange" type="range" style="width:200px"> <button id="tilRangePlay" style="background-color:lime">TIL</button></p>'
-    
+
     h += '<span style="font-size:small;color:gray">... additional classifications will be available here ...</span>'
     // h += '<br>Cancer  &#8592 (prediction) &#8594 TIL</p>'
     h += '<p> <input id="segmentationRange" type="range" style="width:200px" value='+tilmap.parms.threshold+'> <button id="rangeSegmentBt" style="background-color:lime">Segment</button>'
@@ -232,7 +244,7 @@ tilmap.calcTILfun=function(){
         }
         if((this.id=="tilRangePlay")&(cancerRangePlay.style.backgroundColor=="orange")){
             cancerRangePlay.click()
-        } 
+        }
 
 
         var range = document.getElementById(this.id.slice(0,-4)) // range input for this button
@@ -280,7 +292,7 @@ tilmap.calcTILfun=function(){
         }
         //debugger
         tilmap.cvBase.onclick=tilmap.img.onclick
-        
+
         cancerRange.onchange=tilRange.onchange=function(){
             //debugger
             tilmap.cvBase.hidden=false
@@ -440,3 +452,8 @@ tilmap.getRelative = async function(id,xy){ // converts relative to absolute coo
     return (await fetch(url)).json().then(info=>[xy[0]*info[0].width,xy[1]*info[0].height].map(c=>parseInt(c)))
 }
 
+const obfuscatedId = true;
+tilmap.getSlideData = async function (slide) {
+    url = '/data/Slide/find?slide=' + slide;
+    return (await fetch(url)).json()
+};

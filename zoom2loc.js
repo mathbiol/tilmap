@@ -7,6 +7,7 @@ console.log('zoom2loc.js loaded');
  */
 zoom2loc = function (event) {
 
+    let findapi = !obfuscatedId;
     // Get click position
     let clickPos = {};
     clickPos.x = event.offsetX ? (event.offsetX) : event.pageX - document.getElementById("imgTILDiv").offsetLeft;
@@ -28,31 +29,34 @@ zoom2loc = function (event) {
     const ifrm = document.getElementById('caMicrocopeIfr');
     const ifrmLoc = new URL(ifrm.src);
 
+    // Get slide data
     promiseA = async function (id) {
-
-        const winLoc = window.location;
-        // Build query url
-        let queryLoc;
-        if (ifrmLoc.protocol !== winLoc.protocol) {
-            // Match protocol
-            queryLoc = winLoc.protocol;
+        if (findapi) {
+            const winLoc = window.location;
+            // Build query url
+            let queryLoc;
+            if (ifrmLoc.protocol !== winLoc.protocol) {
+                // Match protocol
+                queryLoc = winLoc.protocol;
+            } else {
+                queryLoc = ifrmLoc.protocol;
+            }
+            queryLoc += `//${ifrmLoc.hostname}`;
+            // If quip1, then use port.
+            if (queryLoc.includes('quip1')) {
+                queryLoc += ':443';
+            }
+            queryLoc += `/quip-findapi?limit=10&db=quip&collection=images&find={"case_id":"${id}"}`;
+            console.log('queryLoc', queryLoc);
+            return (await fetch(queryLoc)).json()
         } else {
-            queryLoc = ifrmLoc.protocol;
+            return (await fetch(`/data/Slide/find?slide=${id}`)).json()
         }
-        queryLoc += `//${ifrmLoc.hostname}`;
-        // If quip1, then use port.
-        if (queryLoc.includes('quip1')) {
-            queryLoc += ':443';
-        }
-        queryLoc += `/quip-findapi?limit=10&db=quip&collection=images&find={"case_id":"${id}"}`;
-        console.log('queryLoc', queryLoc);
-        return (await fetch(queryLoc)).json()
     };
 
     let slide = tilmap.selTumorTissue.value.slice(0, -4);
     // Patch to correct slide name
-    if (slide.includes("til_cancer"))
-    {
+    if (slide.includes("til_cancer")) {
         let arr = slide.split("_");
         slide = arr[0];
     }
@@ -72,11 +76,30 @@ zoom2loc = function (event) {
         scale.w = slideDim.width / imgDim.w;
         scale.h = slideDim.height / imgDim.h;
         //console.log("scale", scale);
+
+        // States
+        let states = {};
+        let x1 = clickPos.x * scale.w;
+        console.log('x1', x1);
+        let y1 = clickPos.y * scale.h;
+        console.log('y1', y1);
+
+        states.x = parseFloat(x1 / slideDim.width);
+        states.y = parseFloat(y1 / slideDim.height);
+        states.z = 1.6;
+        console.log('states', states);
+        // Encode to Base64
+        let encodedData = encodeURIComponent(btoa(JSON.stringify(states)));
         // Strip existing x,y search parameters and set new ones
         if (newIfrmLoc.indexOf('&x=') > -1) {
             newIfrmLoc = newIfrmLoc.substring(0, newIfrmLoc.indexOf('&x='));
         }
-        ifrm.src = `${newIfrmLoc}&x=${Math.ceil(clickPos.x * scale.w)}&y=${Math.ceil(clickPos.y * scale.h)}&zoom=5`;
+        // Set frame src to desired location
+        if (obfuscatedId) {
+            ifrm.src = `/viewer.html?slideId=${result[0]['_id']['$oid']}&states=${encodedData}`;
+        } else {
+            ifrm.src = `${newIfrmLoc}&x=${Math.ceil(clickPos.x * scale.w)}&y=${Math.ceil(clickPos.y * scale.h)}&zoom=5`;
+        }
         console.log('ifrm.src:', ifrm.src);
 
     });
