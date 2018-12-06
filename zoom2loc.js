@@ -50,6 +50,12 @@ zoom2loc = function (event) {
     };
 
     let slide = tilmap.selTumorTissue.value.slice(0, -4);
+    // Patch to correct slide name
+    if (slide.includes("til_cancer"))
+    {
+        let arr = slide.split("_");
+        slide = arr[0];
+    }
     promiseB = promiseA(slide, [clickPos.x, clickPos.y]);
 
     // Get slide dimensions
