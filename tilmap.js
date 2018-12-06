@@ -452,7 +452,7 @@ tilmap.getRelative = async function(id,xy){ // converts relative to absolute coo
     return (await fetch(url)).json().then(info=>[xy[0]*info[0].width,xy[1]*info[0].height].map(c=>parseInt(c)))
 }
 
-const obfuscatedId = true;
+const obfuscatedId = false;
 tilmap.getSlideData = async function (slide) {
     url = '/data/Slide/find?slide=' + slide;
     return (await fetch(url)).json()

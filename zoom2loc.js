@@ -3,7 +3,7 @@ console.log('zoom2loc.js loaded');
 /**
  * This code is run when someone clicks on the png file.
  * It changes the location, zooming in the slide viewer.
- * NOTE: FOR SEER IMAGES, YOU MUST BE LOGGED IN.
+ * NOTE: EXPERIMENTAL SLIDES REQUIRE LOG-IN.
  */
 zoom2loc = function (event) {
 
@@ -28,24 +28,34 @@ zoom2loc = function (event) {
 
     const ifrm = document.getElementById('caMicrocopeIfr');
     const ifrmLoc = new URL(ifrm.src);
+    const winLoc = window.location;
+
+    // Build query url
+    var queryLoc;
+    if (ifrmLoc.protocol !== winLoc.protocol) {
+        // Match protocol
+        queryLoc = winLoc.protocol;
+    } else {
+        queryLoc = ifrmLoc.protocol;
+    }
+    queryLoc += `//${ifrmLoc.hostname}`;
+
+    if (findapi) {
+        // If quip1, then use port.
+        if (queryLoc.includes('quip1')) {
+            if (queryLoc.startsWith('https')) {
+                queryLoc += ":8443"
+            } else {
+                queryLoc += ":443"
+            }
+
+        }
+        console.log('queryLoc', queryLoc);
+    }
 
     // Get slide data
-    promiseA = async function (id) {
+    let getSlideData = async function (id) {
         if (findapi) {
-            const winLoc = window.location;
-            // Build query url
-            let queryLoc;
-            if (ifrmLoc.protocol !== winLoc.protocol) {
-                // Match protocol
-                queryLoc = winLoc.protocol;
-            } else {
-                queryLoc = ifrmLoc.protocol;
-            }
-            queryLoc += `//${ifrmLoc.hostname}`;
-            // If quip1, then use port.
-            if (queryLoc.includes('quip1')) {
-                queryLoc += ':443';
-            }
             queryLoc += `/quip-findapi?limit=10&db=quip&collection=images&find={"case_id":"${id}"}`;
             console.log('queryLoc', queryLoc);
             return (await fetch(queryLoc)).json()
@@ -60,11 +70,11 @@ zoom2loc = function (event) {
         let arr = slide.split("_");
         slide = arr[0];
     }
-    promiseB = promiseA(slide, [clickPos.x, clickPos.y]);
+    let setIframe = getSlideData(slide, [clickPos.x, clickPos.y]);
 
     // Get slide dimensions
     //zoom2loc.getFile('slidemeta.json').then(result => {
-    promiseB.then(function (result) {
+    setIframe.then(function (result) {
 
         // Build new iFrame src
         let slideDim = {};
@@ -80,20 +90,22 @@ zoom2loc = function (event) {
         // States
         let states = {};
         let x1 = clickPos.x * scale.w;
-        console.log('x1', x1);
+        //console.log('x1', x1);
         let y1 = clickPos.y * scale.h;
-        console.log('y1', y1);
-
+        //console.log('y1', y1);
         states.x = parseFloat(x1 / slideDim.width);
         states.y = parseFloat(y1 / slideDim.height);
         states.z = 1.6;
-        console.log('states', states);
+        //console.log('states', states);
+
         // Encode to Base64
         let encodedData = encodeURIComponent(btoa(JSON.stringify(states)));
+
         // Strip existing x,y search parameters and set new ones
         if (newIfrmLoc.indexOf('&x=') > -1) {
             newIfrmLoc = newIfrmLoc.substring(0, newIfrmLoc.indexOf('&x='));
         }
+
         // Set frame src to desired location
         if (obfuscatedId) {
             ifrm.src = `/viewer.html?slideId=${result[0]['_id']['$oid']}&states=${encodedData}`;
@@ -103,5 +115,6 @@ zoom2loc = function (event) {
         console.log('ifrm.src:', ifrm.src);
 
     });
+    return true;
 
 };
