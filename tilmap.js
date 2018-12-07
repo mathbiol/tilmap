@@ -407,7 +407,8 @@ tilmap.segment=function(){
 
 tilmap.transpire=function(){
     var tp = Math.round(2.55*parseInt(transparencyRange.value)) // range value
-    var clrEdge = [255,255,0,255-tp] // yellow
+    //var clrEdge = [255,255,0,255-tp] // yellow
+    var clrEdge = [255,0,144,255-tp] // magenta
     var clrMask = [255,255,255,tp]
     jmat.imwrite(tilmap.cvTop,tilmap.segEdge.map((dd,i)=>{
         return dd.map((d,j)=>{
