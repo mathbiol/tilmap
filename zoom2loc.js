@@ -70,7 +70,8 @@ zoom2loc = function (event) {
         let arr = slide.split("_");
         slide = arr[0];
     }
-    let setIframe = getSlideData(slide, [clickPos.x, clickPos.y]);
+    
+    let setIframe = getSlideData(slide);
 
     // Get slide dimensions
     //zoom2loc.getFile('slidemeta.json').then(result => {
