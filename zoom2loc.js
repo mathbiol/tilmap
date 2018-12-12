@@ -97,6 +97,7 @@ zoom2loc = function (event) {
         states.x = parseFloat(x1 / slideDim.width);
         states.y = parseFloat(y1 / slideDim.height);
         states.z = 1.6;
+        states.hasMark = true;
         //console.log('states', states);
 
         // Encode to Base64
