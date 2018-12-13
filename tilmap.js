@@ -440,6 +440,8 @@ tilmap.transpire=function(){
 tilmap.canvasAlign=function(){
     tilmap.cvTop.style.top=tilmap.cvBase.getBoundingClientRect().top
     tilmap.cvTop.style.left=tilmap.cvBase.getBoundingClientRect().left
+    // correction if needed
+    tilmap.cvTop.style.top=parseFloat(tilmap.cvTop.style.top)+tilmap.cvBase.getBoundingClientRect().top-tilmap.cvTop.getBoundingClientRect().top
 }
 
 
