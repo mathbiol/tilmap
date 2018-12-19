@@ -460,3 +460,6 @@ tilmap.getSlideData = async function (slide) {
     url = '/data/Slide/find?slide=' + slide;
     return (await fetch(url)).json()
 };
+
+// wiring links teh the header to where the application is
+ioUrl.href=location.href
