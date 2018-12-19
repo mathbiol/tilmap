@@ -463,3 +463,4 @@ tilmap.getSlideData = async function (slide) {
 
 // wiring links teh the header to where the application is
 ioUrl.href=location.href
+codeSource.href='https://github.com/mathbiol'+location.pathname
