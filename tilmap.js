@@ -414,7 +414,7 @@ tilmap.segment=function(){
     })
     tilmap.transpire()
     tilmap.parms.threshold=segmentationRange.value
-
+    tilmap.canvasAlign() // making sure it doesn't lose alignment
 }
 
 tilmap.transpire=function(){
