@@ -206,7 +206,8 @@ tilmap.zoom2loc=function(){ // event listener pointing to zoom2loc's code
     //tilmap.img.onclick=function(ev){
         if(typeof(zoom2loc)=="undefined"){
             var s=document.createElement('script')
-            s.src="zoom2loc.js"
+            //s.src="zoom2loc.js"
+            s.src="https://mathbiol.github.io/tilmap/zoom2loc.js"
             s.onload=function(){zoom2loc(ev)}
             document.head.appendChild(s)
         }else{zoom2loc(ev)}
