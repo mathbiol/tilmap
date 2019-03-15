@@ -40,19 +40,6 @@ zoom2loc = function (event) {
     }
     queryLoc += `//${ifrmLoc.hostname}`;
 
-    if (findapi) {
-        // If quip1, then use port.
-        if (queryLoc.includes('quip1')) {
-            if (queryLoc.startsWith('https')) {
-                queryLoc += ":8443"
-            } else {
-                queryLoc += ":443"
-            }
-
-        }
-        console.log('queryLoc', queryLoc);
-    }
-
     // Get slide data
     let getSlideData = async function (id) {
         if (findapi) {
