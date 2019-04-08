@@ -415,7 +415,7 @@ tilmap.segment=function(){
               //return cm[Math.round((Math.max(d[1]*cr,d[0]*tr)/255)*63)].map(x=>Math.round(x*255)).concat(d[2])
           })
     })
-    cancerTiles.textContent=`(${countCancer} tiles, ${Math.round(Math.min(countCancer/tilmap.imgDataB_count,1)*10000)/100}% of tissue`
+    cancerTiles.textContent=`${countCancer} tiles, ${Math.round(Math.min(countCancer/tilmap.imgDataB_count,1)*10000)/100}% of tissue`
     tilTiles.textContent=`${countTil} tiles, ${Math.round(Math.min(countTil/tilmap.imgDataB_count,1)*10000)/100}% of tissue`
     // find neighbors
     var n = tilmap.imgData.length
