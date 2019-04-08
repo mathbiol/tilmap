@@ -222,7 +222,7 @@ tilmap.zoom2loc=function(){ // event listener pointing to zoom2loc's code
 tilmap.calcTILfun=function(){
     //var h=' Decode RGB maps:'
     var h=''
-    h += '<p><span id="hideRGBbuttons" style="color:blue;cursor:hand">RGB[+] </span><span id="rgbButtons" hidden=true><button id="calcTILred" style="background-color:red"> Red channel </button> '
+    h += '<p><span id="hideRGBbuttons" style="color:blue;cursor:hand;font-size:small">RGB[+] </span><span id="rgbButtons" hidden=true><button id="calcTILred" style="background-color:red"> Red channel </button> '
     h += '<span> <button id="calcTILgreen" style="background-color:green"> Green channel </button></span> '
     h += '<span> <button id="calcTILblue" style="background-color:cyan"> Blue channel </button></span> '
     h += '<span> <button id="calcTIL0" style="background-color:white"> original png </button></span></p> '
