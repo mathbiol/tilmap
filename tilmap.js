@@ -226,12 +226,12 @@ tilmap.calcTILfun=function(){
     h += '<span> <button id="calcTILgreen" style="background-color:green"> Green channel </button></span> '
     h += '<span> <button id="calcTILblue" style="background-color:cyan"> Blue channel </button></span> '
     h += '<span> <button id="calcTIL0" style="background-color:white"> original png </button></p> '
-    h += '<p><span><input id="cancerRange" type="range" style="width:200px"> <button id="cancerRangePlay" style="background-color:lime">Cancer</button> (<span id="cancerTiles">...</span> tiles)</span>'
-    h += '<br><input id="tilRange" type="range" style="width:200px"> <button id="tilRangePlay" style="background-color:lime">TIL</button>  (<span id="tilTiles">...</span> tiles)</p>'
+    h += '<p><span><input id="cancerRange" type="range" style="width:200px"> <button id="cancerRangePlay" style="background-color:lime">Cancer</button> <span id="cancerTiles"> counting ...</span></span>'
+    h += '<br><input id="tilRange" type="range" style="width:200px"> <button id="tilRangePlay" style="background-color:lime">TIL</button>  <span id="tilTiles">counting ...</span></p>'
 
     h += '<span style="font-size:small;color:gray">... additional classifications will be available here ...</span>'
     // h += '<br>Cancer  &#8592 (prediction) &#8594 TIL</p>'
-    h += '<p> <input id="segmentationRange" type="range" style="width:200px" value='+tilmap.parms.threshold+'> <button id="rangeSegmentBt" style="background-color:lime">Backroung suppression</button> (<span id="backTiles">...</span> tiles)'
+    h += '<p> <input id="segmentationRange" type="range" style="width:200px" value='+tilmap.parms.threshold+'> <button id="rangeSegmentBt" style="background-color:lime">Backroung suppression</button> <span id="backTiles">...</span>'
     h += '<br>&nbsp;&nbsp;&nbsp;<span style="font-size:small"> 0 &#8592(segmentation threshold)&#8594 1</span>'
     h += '<br> <input id="transparencyRange" type="range" style="width:200px" value='+tilmap.parms.transparency+'>'
     h += '<br><span style="font-size:small">&nbsp; 0 &#8592 (segmentation transparency) &#8594 1<s/pan></p>'
@@ -288,6 +288,7 @@ tilmap.calcTILfun=function(){
         tilmap.imgDataR=tilmap.imSlice(0)
         tilmap.imgDataG=tilmap.imSlice(1)
         tilmap.imgDataB=tilmap.imSlice(2)
+        tilmap.imgDataB_count=tilmap.imgDataB.map(x=>x.map(x=>x/255)).map(x=>x.reduce((a,b)=>a+b)).reduce((a,b)=>a+b)
         calcTILred.onclick=function(){tilmap.from2D(tilmap.imSlice(0))}
         calcTILgreen.onclick=function(){tilmap.from2D(tilmap.imSlice(1))}
         calcTILblue.onclick=function(){tilmap.from2D(tilmap.imSlice(2))}
@@ -402,8 +403,8 @@ tilmap.segment=function(){
               //return cm[Math.round((Math.max(d[1]*cr,d[0]*tr)/255)*63)].map(x=>Math.round(x*255)).concat(d[2])
           })
     })
-    cancerTiles.textContent=countCancer
-    tilTiles.textContent=countTil
+    cancerTiles.textContent=`(${countCancer} tiles, ${Math.round(Math.min(countCancer/tilmap.imgDataB_count,1)*10000)/100}% of tissue`
+    tilTiles.textContent=`${countTil} tiles, ${Math.round(Math.min(countTil/tilmap.imgDataB_count,1)*10000)/100}% of tissue`
     // find neighbors
     var n = tilmap.imgData.length
     var m = tilmap.imgData[0].length
@@ -426,7 +427,8 @@ tilmap.segment=function(){
     })
     tilmap.transpire()
     tilmap.parms.threshold=segmentationRange.value
-    backTiles.textContent=tilmap.segMask.map(x=>x.reduce((a,b)=>a+b)).reduce((a,b)=>a+b)
+    let countBackTiles=tilmap.segMask.map(x=>x.reduce((a,b)=>a+b)).reduce((a,b)=>a+b)
+    backTiles.textContent=`${countBackTiles} tiles, ${Math.round(Math.min(countBackTiles/tilmap.imgDataB_count,1)*10000)/100}% of tissue `
     tilmap.canvasAlign() // making sure it doesn't lose alignment
 }
 
