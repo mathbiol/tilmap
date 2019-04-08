@@ -222,10 +222,10 @@ tilmap.zoom2loc=function(){ // event listener pointing to zoom2loc's code
 tilmap.calcTILfun=function(){
     //var h=' Decode RGB maps:'
     var h=''
-    h += '<p> <button id="calcTILred" style="background-color:red"> Red channel </button></span> '
+    h += '<p><span id="hideRGBbuttons" style="color:blue;cursor:hand">RGB[+] </span><span id="rgbButtons" hidden=true><button id="calcTILred" style="background-color:red"> Red channel </button> '
     h += '<span> <button id="calcTILgreen" style="background-color:green"> Green channel </button></span> '
     h += '<span> <button id="calcTILblue" style="background-color:cyan"> Blue channel </button></span> '
-    h += '<span> <button id="calcTIL0" style="background-color:white"> original png </button></p> '
+    h += '<span> <button id="calcTIL0" style="background-color:white"> original png </button></span></p> '
     h += '<p><span><input id="cancerRange" type="range" style="width:200px"> <button id="cancerRangePlay" style="background-color:lime">Cancer</button> <span id="cancerTiles"> counting ...</span></span>'
     h += '<br><input id="tilRange" type="range" style="width:200px"> <button id="tilRangePlay" style="background-color:lime">TIL</button>  <span id="tilTiles">counting ...</span></p>'
 
@@ -238,6 +238,18 @@ tilmap.calcTILfun=function(){
     h += '<hr> <select><option>add more classifications</option><option>(under development)</option></select>'
 
     tilmap.calcTILdiv.innerHTML=h
+    hideRGBbuttons.onclick=function(){
+        if(rgbButtons.hidden){
+            rgbButtons.hidden=false
+            hideRGBbuttons.textContent='RGB[-] '
+            hideRGBbuttons.style.color="maroon"         
+        }else{
+            rgbButtons.hidden=true
+            hideRGBbuttons.textContent='RGB[+] '
+            hideRGBbuttons.style.color="blue"
+        }
+        //debugger
+    }
     tilmap.zoom2loc()
     cancerRange.value=tilmap.parms.cancerRange
     tilRange.value=tilmap.parms.tilRange
