@@ -411,7 +411,7 @@ tilmap.segment=function(){
               //return (d[0]*(k)+d[1]*(1-k))>=sv
               countCancer+=(d[1]*cr>=sv)
               countTil+=(d[0]*tr>=sv)
-              return (Math.max(d[1]*cr,d[0]*tr))>=sv
+              return ((Math.max(d[1]*cr,d[0]*tr))>=sv)&(d[2]==255)
 
               //return cm[Math.round((Math.max(d[1]*cr,d[0]*tr)/255)*63)].map(x=>Math.round(x*255)).concat(d[2])
           })
