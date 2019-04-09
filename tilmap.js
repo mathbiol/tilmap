@@ -409,15 +409,15 @@ tilmap.segment=function(){
           return dd.map(d=>{
               //return (d[0]*(k)+d[1]*(1-k))>sv
               //return (d[0]*(k)+d[1]*(1-k))>=sv
-              countCancer+=(d[1]*cr>=sv)
-              countTil+=(d[0]*tr>=sv)
+              countCancer+=(d[1]*cr>=sv)&(d[2]==255)
+              countTil+=(d[0]*tr>=sv)&(d[2]==255)
               return ((Math.max(d[1]*cr,d[0]*tr))>=sv)&(d[2]==255)
 
               //return cm[Math.round((Math.max(d[1]*cr,d[0]*tr)/255)*63)].map(x=>Math.round(x*255)).concat(d[2])
           })
     })
-    cancerTiles.textContent=`${countCancer} tiles, ${Math.round(Math.min(countCancer/tilmap.imgDataB_count,1)*10000)/100}% of tissue`
-    tilTiles.textContent=`${countTil} tiles, ${Math.round(Math.min(countTil/tilmap.imgDataB_count,1)*10000)/100}% of tissue`
+    cancerTiles.textContent=`${countCancer} tiles, ${Math.round((countCancer/tilmap.imgDataB_count)*10000)/100}% of tissue`
+    tilTiles.textContent=`${countTil} tiles, ${Math.round((countTil/tilmap.imgDataB_count)*10000)/100}% of tissue`
     // find neighbors
     var n = tilmap.imgData.length
     var m = tilmap.imgData[0].length
@@ -441,7 +441,7 @@ tilmap.segment=function(){
     tilmap.transpire()
     tilmap.parms.threshold=segmentationRange.value
     let countBackTiles=tilmap.segMask.map(x=>x.reduce((a,b)=>a+b)).reduce((a,b)=>a+b)
-    backTiles.textContent=`${countBackTiles} tiles, ${Math.round(Math.min(countBackTiles/tilmap.imgDataB_count,1)*10000)/100}% of tissue `
+    backTiles.textContent=`${countBackTiles} tiles, ${Math.round((countBackTiles/tilmap.imgDataB_count)*10000)/100}% of tissue `
     tilmap.canvasAlign() // making sure it doesn't lose alignment
 }
 
