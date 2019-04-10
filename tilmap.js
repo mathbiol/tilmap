@@ -248,7 +248,7 @@ tilmap.calcTILfun=function(){
             hideRGBbuttons.textContent='RGB[+] '
             hideRGBbuttons.style.color="blue"
         }
-        //debugger
+        tilmap.canvasAlign()
     }
     tilmap.zoom2loc()
     cancerRange.value=tilmap.parms.cancerRange
